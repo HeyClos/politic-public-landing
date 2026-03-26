@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoliticPublic — Council Intelligence for Policy Professionals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --navy-mid: #162236;
+  --navy-light: #1e3050;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dim: rgba(201,168,76,0.15);
+  --cream: #f5f0e8;
+  --cream-dim: #ede5d4;
+  --white: #ffffff;
+  --text-muted: #8a9ab5;
+  --border: rgba(201,168,76,0.2);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+  --sans: 'Instrument Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 60px;
+  background: rgba(13,27,42,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--cream); }
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  padding: 10px 22px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 60px 80px;
+  overflow: hidden;
+}
+
+.hero-bg-lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(201,168,76,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  z-index: 0;
+}
+
+.hero-bg-gradient {
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  margin-bottom: 36px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.1s forwards;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.25s forwards;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.4s forwards;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.55s forwards;
+}
+
+.btn-primary {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  padding: 16px 36px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 0 0 0 rgba(201,168,76,0.4);
+}
+.btn-primary:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.2);
+}
+
+.btn-secondary {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream);
+  padding: 16px 36px;
+  text-decoration: none;
+  display: inline-block;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 40px; left: 60px;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 1s forwards;
+}
+.hero-scroll-hint::before {
+  content: '';
+  width: 40px; height: 1px;
+  background: var(--gold);
+  display: block;
+}
+
+/* ── TICKER ── */
+.ticker {
+  background: var(--navy-mid);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  padding: 14px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.ticker-inner {
+  display: flex;
+  gap: 80px;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+}
+
+.ticker-item {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ticker-dot {
+  width: 5px; height: 5px;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  background: var(--navy-mid);
+  padding: 48px 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  border-bottom: 1px solid var(--border);
+}
+
+.stat-item {
+  padding: 24px 40px;
+  border-right: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.stat-item:last-child { border-right: none; }
+.stat-item.visible { opacity: 1; transform: translateY(0); }
+
+.stat-number {
+  font-family: var(--serif);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── SECTIONS ── */
+section {
+  position: relative;
+  z-index: 1;
+}
+
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 100px 60px;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+  display: block;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--cream);
+  margin-bottom: 20px;
+}
+.section-title em { font-style: italic; color: var(--gold); }
+
+.section-body {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 560px;
+  line-height: 1.75;
+}
+
+/* ── PAIN POINTS ── */
+.pain-section {
+  background: var(--navy-light);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.pain-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 60px;
+}
+
+.pain-card {
+  background: var(--navy-mid);
+  padding: 44px 40px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.pain-card.visible { opacity: 1; transform: translateY(0); }
+
+.pain-card-before {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #e05c5c;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pain-card-before::before { content: '✕'; }
+
+.pain-card-after {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #5cbe8f;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pain-card-after::before { content: '✓'; }
+
+.pain-card h3 {
+  font-family: var(--serif);
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.pain-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ── HOW IT WORKS ── */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+  margin-top: 72px;
+}
+
+.step {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.step.visible { opacity: 1; transform: translateY(0); }
+
+.step-num {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  margin-bottom: 20px;
+  display: block;
+}
+
+.step-icon {
+  width: 48px; height: 48px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: var(--gold);
+  font-size: 1.3rem;
+}
+
+.step h3 {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 12px;
+}
+
+.step p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
+/* ── SAMPLE BRIEF ── */
+.brief-section {
+  background: var(--navy-light);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.brief-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.brief-card {
+  background: var(--navy);
+  border: 1px solid var(--border);
+  padding: 40px;
+  position: relative;
+}
+
+.brief-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--gold), transparent);
+}
+
+.brief-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brief-meta {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.brief-live {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5cbe8f;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brief-live::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: #5cbe8f;
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+
+.brief-title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.brief-summary {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 24px;
+}
+
+.brief-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.brief-tag {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.brief-tag.hot {
+  border-color: rgba(201,168,76,0.4);
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.brief-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+/* ── PLANS ── */
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 64px;
+}
+
+.plan {
+  background: var(--navy-mid);
+  padding: 48px 36px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.plan.visible { opacity: 1; transform: translateY(0); }
+
+.plan.featured {
+  background: var(--navy-light);
+}
+
+.plan.featured::before {
+  content: 'Most Popular';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 7px;
+}
+.plan.featured { padding-top: 60px; }
+
+.plan-name {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.plan-price {
+  font-family: var(--serif);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.plan-price sup {
+  font-size: 1.2rem;
+  vertical-align: super;
+  color: var(--text-muted);
+}
+
+.plan-period {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+}
+
+.plan-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.plan-features {
+  list-style: none;
+  margin-bottom: 40px;
+}
+
+.plan-features li {
+  font-size: 0.88rem;
+  color: var(--cream);
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plan-features li::before {
+  content: '→';
+  color: var(--gold);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.plan-cta {
+  display: block;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  color: var(--cream);
+  transition: all 0.2s;
+}
+.plan-cta:hover { border-color: var(--gold); color: var(--gold); }
+
+.plan.featured .plan-cta {
+  background: var(--gold);
+  color: var(--navy);
+  border-color: var(--gold);
+}
+.plan.featured .plan-cta:hover { background: var(--gold-light); }
+
+/* ── TESTIMONIALS ── */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 64px;
+}
+
+.testimonial {
+  background: var(--navy-light);
+  border: 1px solid var(--border);
+  padding: 36px 32px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.testimonial.visible { opacity: 1; transform: translateY(0); }
+
+.testimonial::before {
+  content: '\201C';
+  font-family: var(--serif);
+  font-size: 5rem;
+  color: var(--gold);
+  line-height: 1;
+  position: absolute;
+  top: 12px; left: 28px;
+  opacity: 0.25;
+}
+
+.testimonial-text {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--cream);
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.author-avatar {
+  width: 40px; height: 40px;
+  background: var(--navy-mid);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.author-name {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--cream);
+}
+
+.author-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── CTA BAND ── */
+.cta-band {
+  background: var(--gold);
+  padding: 80px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(13,27,42,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(13,27,42,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.cta-band-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-band h2 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+
+.cta-band p {
+  font-size: 1.05rem;
+  color: rgba(13,27,42,0.7);
+  margin-bottom: 40px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-band .btn-dark {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: var(--navy);
+  padding: 18px 44px;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+.cta-band .btn-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(13,27,42,0.25);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--navy-mid);
+  border-top: 1px solid var(--border);
+  padding: 60px;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 60px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer-brand-name {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.footer-brand-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 240px;
+}
+
+.footer-col-title {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 10px; }
+
+.footer-links a {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--cream); }
+
+.footer-bottom {
+  max-width: 1100px;
+  margin: 40px auto 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 18px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  .stats-bar { grid-template-columns: 1fr 1fr; padding: 24px; }
+  .section-inner { padding: 60px 24px; }
+  .pain-grid { grid-template-columns: 1fr; }
+  .brief-wrap { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .plans-grid { grid-template-columns: 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .cta-band { padding: 60px 24px; }
+  footer { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">PoliticPublic</a>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#sample">Sample Brief</a></li>
+    <li><a href="#plans">Pricing</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <a href="#plans" class="nav-cta">Start Free Trial</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-lines"></div>
+  <div class="hero-bg-gradient"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Council Intelligence Platform</div>
+    <h1>What happened in chambers<br>while you were <em>elsewhere.</em></h1>
+    <p class="hero-sub">PoliticPublic delivers sharp, no-filler briefings from local government council meetings — so lobbyists and legislators stay ahead of every vote, amendment, and agenda shift.</p>
+    <div class="hero-actions">
+      <a href="#plans" class="btn-primary">Start 14-Day Free Trial</a>
+      <a href="#sample" class="btn-secondary">View Sample Brief</a>
+    </div>
+  </div>
+  <span class="hero-scroll-hint">Scroll to explore</span>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner" id="tickerContent">
+    <span class="ticker-item"><span class="ticker-dot"></span>Zoning Amendment 22-B — Passed 6–3 — Los Angeles City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Emergency Budget Resolution — Under Review — Chicago City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Public Safety Ordinance 118 — Second Reading — Houston City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Infrastructure Bond Measure — Approved 7–2 — Phoenix City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Housing Density Proposal — Deferred — Seattle City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Cannabis Licensing Framework — First Reading — Denver City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Transit Expansion Study — Commissioned — Austin City Council</span>
+    <!-- Duplicate for seamless loop -->
+    <span class="ticker-item"><span class="ticker-dot"></span>Zoning Amendment 22-B — Passed 6–3 — Los Angeles City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Emergency Budget Resolution — Under Review — Chicago City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Public Safety Ordinance 118 — Second Reading — Houston City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Infrastructure Bond Measure — Approved 7–2 — Phoenix City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Housing Density Proposal — Deferred — Seattle City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Cannabis Licensing Framework — First Reading — Denver City Council</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Transit Expansion Study — Commissioned — Austin City Council</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat-item">
+    <div class="stat-number">500+</div>
+    <div class="stat-label">Councils Monitored</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">&lt; 2hrs</div>
+    <div class="stat-label">Average Summary Delivery</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">98%</div>
+    <div class="stat-label">Coverage Accuracy</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">3,200+</div>
+    <div class="stat-label">Policy Professionals Served</div>
+  </div>
+</div>
+
+<!-- PAIN POINTS -->
+<section class="pain-section">
+  <div class="section-inner">
+    <span class="section-label">The Problem We Solve</span>
+    <h2 class="section-title">Council meetings move fast.<br>Most professionals are<em> still catching up.</em></h2>
+    <p class="section-body">Hours of recordings. Dense agendas. Buried amendments. Missing a single vote can mean missed opportunities, wasted lobbying efforts, or policy blind spots.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-card-before">Before PoliticPublic</div>
+        <h3>Sit through 4-hour meeting recordings</h3>
+        <p>Manually scrubbing through video or transcripts to find what changed, what passed, and what's coming next.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-card-after">After PoliticPublic</div>
+        <h3>Read a 3-minute structured brief</h3>
+        <p>Get every material motion, vote outcome, and key quote delivered to your inbox before end of day.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-card-before">Before PoliticPublic</div>
+        <h3>Miss critical amendments buried in procedural debate</h3>
+        <p>The important language often comes late in the session, long after most aides and staff have tuned out.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-card-after">After PoliticPublic</div>
+        <h3>Flag changes that affect your priorities</h3>
+        <p>Set issue-area filters. Get alerts the moment something relevant to your clients moves through chambers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <span class="section-label">Our Method</span>
+    <h2 class="section-title">From live session to <em>actionable briefing</em></h2>
+    <p class="section-body">We've built a pipeline that monitors, transcribes, and structures council proceedings at scale — then strips out everything that doesn't move the needle.</p>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01</span>
+        <div class="step-icon">📡</div>
+        <h3>Live Session Capture</h3>
+        <p>We monitor over 500 council meetings continuously — pulling live streams, official transcripts, and published minutes as they become available.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <div class="step-icon">⚡</div>
+        <h3>Structured Summarization</h3>
+        <p>Each session is distilled into a clean brief: agenda items, key votes, who said what, and what's coming next. Zero filler. No spin.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <div class="step-icon">🎯</div>
+        <h3>Delivered to Your Desk</h3>
+        <p>Briefs hit your inbox within hours of adjournment. Set filters by jurisdiction, issue area, or stakeholder to get exactly what matters to you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAMPLE BRIEF -->
+<section class="brief-section" id="sample">
+  <div class="section-inner">
+    <div class="brief-wrap">
+      <div>
+        <span class="section-label">Sample Intelligence Brief</span>
+        <h2 class="section-title">The intel your clients<br>are <em>paying for.</em></h2>
+        <p class="section-body">This is what a PoliticPublic brief looks like. Clean. Structured. Immediately useful — whether you're prepping talking points or advising a client on next steps.</p>
+        <br><br>
+        <a href="#plans" class="btn-primary" style="display:inline-block;">Get Full Access</a>
+      </div>
+      <div class="brief-card">
+        <div class="brief-header">
+          <div>
+            <div class="brief-meta">Los Angeles City Council · Session 44-C</div>
+            <div class="brief-meta" style="color: var(--text-muted); margin-top:4px">March 18, 2026 · 2:30 PM</div>
+          </div>
+          <div class="brief-live">Delivered</div>
+        </div>
+        <div class="brief-title">Proposed Density Bonus Amendment to LAMC Section 65915 — Second Reading</div>
+        <div class="brief-summary">Council voted 9–4 to advance the density bonus amendment to final reading. Key opposition from CD-5 and CD-11 centred on parking minimums. CM Park introduced a last-minute amendment extending the affordability covenant from 55 to 75 years — adopted 10–3. Expect final vote within 21 days pending Planning Commission sign-off.</div>
+        <div class="brief-tags">
+          <span class="brief-tag hot">● High Impact</span>
+          <span class="brief-tag">Zoning</span>
+          <span class="brief-tag">Housing</span>
+          <span class="brief-tag">Real Estate</span>
+          <span class="brief-tag">Amendment Introduced</span>
+        </div>
+        <div class="brief-footer">
+          <span>Delivered 4:17 PM · 112 min after adjournment</span>
+          <span style="color: var(--gold)">→ View Full Brief</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="section-inner">
+    <span class="section-label">From the Field</span>
+    <h2 class="section-title">Trusted by those who <em>can't afford to miss.</em></h2>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <p class="testimonial-text">I used to have a junior staffer compile meeting notes every week. Now PoliticPublic does it better in a fraction of the time.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">D</div>
+          <div>
+            <div class="author-name">Dana Whitmore</div>
+            <div class="author-title">Government Relations Director · Axios Group</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-text">We cover six jurisdictions. Before this, we were always a step behind. Now we're the ones briefing clients on things they haven't heard yet.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">M</div>
+          <div>
+            <div class="author-name">Marcus Chen</div>
+            <div class="author-title">Senior Lobbyist · Pacific Policy Partners</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial-text">The issue filters are a game-changer. I set them for infrastructure and water rights and my brief is exactly three pages, every time.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">R</div>
+          <div>
+            <div class="author-name">Rachel Torres</div>
+            <div class="author-title">Legislative Aide · State Senate, District 22</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="plans" style="background: var(--navy-light); border-top: 1px solid var(--border);">
+  <div class="section-inner">
+    <span class="section-label">Pricing</span>
+    <h2 class="section-title">Built for professionals<br>who <em>bill by the hour.</em></h2>
+    <p class="section-body">A 14-day free trial, no credit card required. Cancel any time.</p>
+    <div class="plans-grid">
+      <div class="plan">
+        <div class="plan-name">Briefing</div>
+        <div class="plan-price"><sup>$</sup>89</div>
+        <div class="plan-period">per month · billed annually</div>
+        <p class="plan-desc">For individual lobbyists or aides tracking a single region.</p>
+        <ul class="plan-features">
+          <li>1 jurisdiction / metro area</li>
+          <li>Daily email digest</li>
+          <li>2 issue-area filters</li>
+          <li>30-day archive access</li>
+          <li>Standard delivery (same day)</li>
+        </ul>
+        <a href="#" class="plan-cta">Start Free Trial</a>
+      </div>
+      <div class="plan featured">
+        <div class="plan-name">Intelligence</div>
+        <div class="plan-price"><sup>$</sup>249</div>
+        <div class="plan-period">per month · billed annually</div>
+        <p class="plan-desc">For policy professionals managing multiple clients or districts.</p>
+        <ul class="plan-features">
+          <li>Up to 10 jurisdictions</li>
+          <li>Real-time push alerts</li>
+          <li>Unlimited issue filters</li>
+          <li>Full archive + export</li>
+          <li>Priority delivery (&lt; 2hrs)</li>
+          <li>Client-ready PDF exports</li>
+        </ul>
+        <a href="#" class="plan-cta">Start Free Trial</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price" style="font-size: 2rem; padding-top: 0.6rem;">Custom</div>
+        <div class="plan-period">tailored to your firm</div>
+        <p class="plan-desc">For lobbying firms, legislative caucuses, and government affairs teams.</p>
+        <ul class="plan-features">
+          <li>Unlimited jurisdictions</li>
+          <li>Team seats + permissions</li>
+          <li>API &amp; CRM integrations</li>
+          <li>Dedicated account manager</li>
+          <li>White-label options</li>
+          <li>Custom reporting</li>
+        </ul>
+        <a href="#" class="plan-cta">Request a Demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="cta-band-inner">
+    <h2>Your next missed vote<br>could be the costly one.</h2>
+    <p>Start your free 14-day trial. No credit card. Full access. Cancel any time.</p>
+    <a href="#plans" class="btn-dark">Start Free Trial Today</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">PoliticPublic</div>
+      <p class="footer-brand-desc">Council intelligence for policy professionals. No fluff. No spin. Just what moved in chambers.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Platform</div>
+      <ul class="footer-links">
+        <li><a href="#">Features</a></li>
+        <li><a href="#">How It Works</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">API Access</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Legal</div>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Security</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 PoliticPublic · Council Intelligence Platform</span>
+    <span>Making policy professionals unstoppable</span>
+  </div>
+</footer>
+
+<script>
+// Intersection observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').forEach(el => observer.observe(el));
+
+// Smooth nav background
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.borderBottomColor =
+    window.scrollY > 40 ? 'rgba(201,168,76,0.25)' : 'rgba(201,168,76,0.2)';
+});
+</script>
+</body>
+</html>
