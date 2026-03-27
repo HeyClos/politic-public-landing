@@ -438,13 +438,19 @@ section {
 }
 .step.visible { opacity: 1; transform: translateY(0); }
 
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
 .step-num {
   font-family: var(--mono);
   font-size: 0.68rem;
   letter-spacing: 0.15em;
   color: var(--gold);
-  margin-bottom: 20px;
-  display: block;
+  flex-shrink: 0;
 }
 
 .step-icon {
@@ -453,9 +459,9 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
   color: var(--gold);
   font-size: 1.3rem;
+  flex-shrink: 0;
 }
 
 .step h3 {
@@ -463,7 +469,6 @@ section {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--cream);
-  margin-bottom: 12px;
 }
 
 .step p {
@@ -1051,27 +1056,33 @@ footer {
     <p class="section-body">We monitor, transcribe, and structure council proceedings at scale — then strip out everything that doesn't move the needle for your practice.</p>
     <div class="steps">
       <div class="step">
-        <span class="step-num">01</span>
-        <div class="step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <div class="step-header">
+          <span class="step-num">01</span>
+          <div class="step-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3>Capture</h3>
         </div>
-        <h3>Capture</h3>
         <p>We pull live streams, official transcripts, and published minutes from 500+ councils as sessions happen — no lag, no gaps.</p>
       </div>
       <div class="step">
-        <span class="step-num">02</span>
-        <div class="step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        <div class="step-header">
+          <span class="step-num">02</span>
+          <div class="step-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          </div>
+          <h3>Distill</h3>
         </div>
-        <h3>Distill</h3>
         <p>Each session is reduced to what matters: agenda items, key votes, who said what, and what's next. Zero filler. No interpretation.</p>
       </div>
       <div class="step">
-        <span class="step-num">03</span>
-        <div class="step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <div class="step-header">
+          <span class="step-num">03</span>
+          <div class="step-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <h3>Deliver</h3>
         </div>
-        <h3>Deliver</h3>
         <p>Briefs land in your inbox within hours of adjournment. Filter by jurisdiction, issue area, or stakeholder — get exactly what your practice needs.</p>
       </div>
     </div>
