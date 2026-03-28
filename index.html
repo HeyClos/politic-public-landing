@@ -357,6 +357,68 @@ section {
   line-height: 1.75;
 }
 
+/* ── TRUST LOGOS ── */
+.trust-section {
+  background: var(--navy);
+  padding: 64px 60px;
+  border-bottom: 1px solid var(--border);
+}
+
+.trust-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.trust-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+.trust-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  flex-wrap: wrap;
+}
+
+.trust-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.45;
+  transition: opacity 0.3s ease;
+  text-decoration: none;
+}
+.trust-logo:hover { opacity: 0.8; }
+
+.trust-logo svg {
+  flex-shrink: 0;
+}
+
+.trust-logo-name {
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.trust-logo-name span {
+  color: var(--gold);
+}
+
+@media (max-width: 900px) {
+  .trust-section { padding: 48px 24px; }
+  .trust-logos { gap: 40px; }
+}
+
 /* ── PAIN POINTS ── */
 .pain-section {
   background: var(--navy-light);
@@ -1016,6 +1078,50 @@ footer {
     <div class="stat-label">Professionals on the Wire</div>
   </div>
 </div>
+
+<!-- TRUST LOGOS -->
+<section class="trust-section" aria-label="Backed by leading organizations">
+  <div class="trust-inner">
+    <div class="trust-label">Backed &amp; Supported By</div>
+    <div class="trust-logos">
+      <!-- AWS -->
+      <a href="https://aws.amazon.com" class="trust-logo" target="_blank" rel="noopener noreferrer" aria-label="Amazon Web Services">
+        <svg width="40" height="24" viewBox="0 0 40 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.2 14.4c0 .5.1.9.2 1.2.1.3.3.6.5.9.1.1.1.2.1.3 0 .1-.1.3-.3.4l-1 .7c-.1.1-.3.1-.4.1-.2 0-.3-.1-.5-.3-.2-.2-.4-.5-.5-.8-.5.6-1.1.9-2 .9-.9 0-1.6-.3-2.1-.8s-.8-1.2-.8-2c0-.9.3-1.6 1-2.2.7-.5 1.6-.8 2.7-.8.4 0 .8 0 1.2.1V11c0-.8-.2-1.3-.5-1.6-.3-.3-.9-.5-1.7-.5-.4 0-.8.1-1.2.2-.4.1-.8.3-1.2.5-.2.1-.3.1-.4.2h-.2c-.2 0-.3-.1-.3-.4v-.8c0-.2 0-.4.1-.5.1-.1.2-.2.4-.3.4-.2.9-.4 1.4-.5.5-.2 1.1-.2 1.7-.2 1.3 0 2.2.3 2.8.9.6.6.9 1.5.9 2.7v3.6zm-2.7 1c.4 0 .7-.1 1.1-.2.4-.2.7-.4.9-.8.1-.2.2-.4.2-.7V13c-.3-.1-.7-.1-1-.1-.7 0-1.3.1-1.6.4-.4.3-.5.7-.5 1.2 0 .5.1.8.3 1 .3.3.6.4 1 .4h-.4z" fill="var(--cream)"/>
+          <path d="M17.5 17.1c-.2 0-.3 0-.4-.1-.1-.1-.2-.3-.3-.5l-2.5-8.2c-.1-.3-.1-.4-.1-.5 0-.2.1-.3.3-.3h1.5c.2 0 .4 0 .5.1.1.1.2.3.2.5l1.8 7 1.7-7c0-.3.1-.4.2-.5.1-.1.3-.1.5-.1h1.2c.2 0 .4 0 .5.1.1.1.2.3.2.5l1.7 7.1 1.8-7.1c.1-.3.1-.4.2-.5.1-.1.3-.1.5-.1h1.4c.2 0 .3.1.3.3 0 .1 0 .2 0 .2l-.1.3-2.6 8.2c-.1.3-.2.4-.3.5-.1.1-.3.1-.4.1h-1.3c-.2 0-.4 0-.5-.1-.1-.1-.2-.3-.2-.6l-1.7-6.8-1.6 6.8c0 .3-.1.5-.2.6-.1.1-.3.1-.5.1h-1.3z" fill="var(--cream)"/>
+          <path d="M31.8 17.3c-.6 0-1.2-.1-1.8-.2-.6-.2-1-.3-1.3-.5-.2-.1-.3-.2-.3-.4v-.8c0-.3.1-.4.3-.4h.1l.2.1c.4.2.8.3 1.2.4.5.1.9.2 1.3.2.7 0 1.2-.1 1.6-.4.3-.2.5-.6.5-1 0-.3-.1-.6-.3-.8-.2-.2-.6-.4-1.2-.6l-1.7-.5c-.9-.3-1.5-.7-1.9-1.2-.4-.5-.6-1-.6-1.6 0-.5.1-.9.3-1.3.2-.4.5-.7.9-.9.4-.3.8-.4 1.2-.6.5-.1 1-.2 1.5-.2.3 0 .5 0 .8.1.3 0 .5.1.8.2.2.1.5.1.7.2.2.1.3.2.4.3.1.1.2.2.2.4v.7c0 .3-.1.4-.3.4-.1 0-.3-.1-.5-.2-.7-.3-1.5-.5-2.3-.5-.6 0-1.1.1-1.4.3-.3.2-.5.6-.5 1 0 .3.1.6.3.8.2.2.7.5 1.3.7l1.6.5c.9.3 1.5.6 1.8 1.1.4.5.5 1 .5 1.6 0 .5-.1.9-.3 1.3-.2.4-.5.7-.9 1-.4.3-.8.5-1.3.6-.6.2-1.1.2-1.7.2z" fill="var(--cream)"/>
+          <path d="M33.5 20.5c-3.5 2.6-8.6 4-13 4-6.1 0-11.7-2.3-15.8-6.1-.3-.3 0-.7.4-.5 4.5 2.6 10.1 4.2 15.8 4.2 3.9 0 8.1-.8 12-2.5.6-.2 1.1.4.6.9z" fill="var(--gold)"/>
+          <path d="M35 18.8c-.5-.6-3-.3-4.2-.1-.4 0-.4-.3-.1-.5 2-1.4 5.4-1 5.8-.5.4.5-.1 3.8-2 5.4-.3.2-.6.1-.4-.2.4-1 1.3-3.5.9-4.1z" fill="var(--gold)"/>
+        </svg>
+      </a>
+      <!-- nClouds -->
+      <a href="https://www.nclouds.com" class="trust-logo" target="_blank" rel="noopener noreferrer" aria-label="nClouds">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 18H8a5 5 0 0 1-.5-10A7 7 0 0 1 21 10a5 5 0 0 1 1 8z" stroke="var(--gold)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="trust-logo-name"><span>n</span>Clouds</span>
+      </a>
+      <!-- StartupNV -->
+      <a href="https://www.startupnv.com" class="trust-logo" target="_blank" rel="noopener noreferrer" aria-label="StartupNV">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="var(--gold)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+          <path d="M2 17l10 5 10-5" stroke="var(--gold)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 12l10 5 10-5" stroke="var(--gold)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="trust-logo-name">Startup<span>NV</span></span>
+      </a>
+      <!-- SBA.gov -->
+      <a href="https://www.sba.gov" class="trust-logo" target="_blank" rel="noopener noreferrer" aria-label="U.S. Small Business Administration">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="10" width="20" height="13" rx="1" stroke="var(--gold)" stroke-width="1.5" fill="none"/>
+          <path d="M6 10V7a7 7 0 0 1 14 0v3" stroke="var(--gold)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M8 15h10M8 19h6" stroke="var(--cream)" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+        <span class="trust-logo-name">SBA<span>.gov</span></span>
+      </a>
+    </div>
+  </div>
+</section>
 
 <!-- PAIN POINTS -->
 <section class="pain-section">
