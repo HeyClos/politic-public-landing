@@ -421,6 +421,12 @@ section {
   transition: filter 0.3s ease;
 }
 .trust-logo:hover img { filter: brightness(0) invert(1); }
+.trust-logo--sba img {
+  height: 36px;
+  filter: none;
+  opacity: 1;
+}
+.trust-logo--sba:hover img { filter: none; }
 
 @media (max-width: 900px) {
   .trust-section { padding: 48px 24px; }
@@ -1111,21 +1117,8 @@ footer {
         <img src="https://startupnv.org/wp-content/uploads/2020/06/startupnv-horiz-black-whitestar-768x326.png" alt="StartupNV" height="28">
       </a>
       <!-- SBA.gov -->
-      <a href="https://www.sba.gov" class="trust-logo" target="_blank" rel="noopener noreferrer" aria-label="U.S. Small Business Administration">
-        <svg width="180" height="40" viewBox="0 0 360 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
-          <!-- Frame: U-shape open on right, top bar extends right with short right-side drop -->
-          <path d="M0 0h110v6H6v68h104v6H0V0z" fill="var(--cream)"/>
-          <path d="M104 0h6v20h-6V0z" fill="var(--cream)"/>
-          <!-- Red accent: bottom-left horizontal bar -->
-          <rect x="0" y="74" width="50" height="6" fill="#cc2027"/>
-          <!-- SBA letters -->
-          <text x="55" y="58" font-family="'Instrument Sans', Arial, sans-serif" font-size="46" font-weight="700" fill="var(--cream)" text-anchor="middle" letter-spacing="3">SBA</text>
-          <!-- Vertical divider -->
-          <rect x="122" y="12" width="1.5" height="56" fill="var(--cream)" opacity="0.25"/>
-          <!-- Descriptor text -->
-          <text x="136" y="36" font-family="'Instrument Sans', sans-serif" font-size="17" font-weight="300" fill="var(--cream)" letter-spacing="0.3" font-style="italic">U.S. Small Business</text>
-          <text x="136" y="58" font-family="'Instrument Sans', sans-serif" font-size="17" font-weight="300" fill="var(--cream)" letter-spacing="0.3" font-style="italic">Administration</text>
-        </svg>
+      <a href="https://www.sba.gov" class="trust-logo trust-logo--sba" target="_blank" rel="noopener noreferrer" aria-label="U.S. Small Business Administration">
+        <img src="sba-logo.svg" alt="U.S. Small Business Administration" height="36">
       </a>
     </div>
   </div>
