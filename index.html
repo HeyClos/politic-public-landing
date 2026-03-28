@@ -414,6 +414,14 @@ section {
   color: var(--gold);
 }
 
+.trust-logo img {
+  height: 28px;
+  width: auto;
+  filter: brightness(0) invert(0.9);
+  transition: filter 0.3s ease;
+}
+.trust-logo:hover img { filter: brightness(0) invert(1); }
+
 @media (max-width: 900px) {
   .trust-section { padding: 48px 24px; }
   .trust-logos { gap: 40px; }
@@ -1099,27 +1107,12 @@ footer {
         <span class="trust-logo-name"><span>n</span>Clouds</span>
       </a>
       <!-- StartupNV -->
-      <a href="https://www.startupnv.com" class="trust-logo" target="_blank" rel="noopener noreferrer" aria-label="StartupNV">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="var(--gold)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
-          <path d="M2 17l10 5 10-5" stroke="var(--gold)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M2 12l10 5 10-5" stroke="var(--gold)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="trust-logo-name">Startup<span>NV</span></span>
+      <a href="https://startupnv.org" class="trust-logo" target="_blank" rel="noopener noreferrer" aria-label="StartupNV">
+        <img src="https://startupnv.org/wp-content/uploads/2020/06/startupnv-horiz-black-whitestar-768x326.png" alt="StartupNV" height="28">
       </a>
       <!-- SBA.gov -->
       <a href="https://www.sba.gov" class="trust-logo" target="_blank" rel="noopener noreferrer" aria-label="U.S. Small Business Administration">
-        <svg width="44" height="28" viewBox="0 0 88 56" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
-          <!-- SBA mark: flag-inspired stripes + star element -->
-          <rect x="2" y="8" width="28" height="3" rx="1.5" fill="var(--gold)" opacity="0.5"/>
-          <rect x="2" y="15" width="28" height="3" rx="1.5" fill="var(--gold)" opacity="0.35"/>
-          <rect x="2" y="22" width="28" height="3" rx="1.5" fill="var(--gold)" opacity="0.5"/>
-          <!-- Star -->
-          <path d="M16 32l2.35 4.76 5.25.76-3.8 3.7.9 5.24L16 43.94l-4.7 2.47.9-5.24-3.8-3.7 5.25-.76L16 32z" fill="var(--gold)" opacity="0.7"/>
-          <!-- SBA text -->
-          <text x="36" y="24" font-family="'Instrument Sans', sans-serif" font-size="22" font-weight="700" fill="var(--cream)" letter-spacing="1">SBA</text>
-          <text x="36" y="42" font-family="'DM Mono', monospace" font-size="7.5" fill="var(--text-muted)" letter-spacing="0.5">.GOV</text>
-        </svg>
+        <img src="https://www.sba.gov/sites/default/files/styles/card_icon/public/2024-04/lockups-horizontal_0.png.webp?itok=-7w3M8qg" alt="U.S. Small Business Administration" height="28">
       </a>
     </div>
   </div>
