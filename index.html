@@ -994,6 +994,126 @@ footer {
   color: var(--text-muted);
 }
 
+/* ── REQUEST ACCESS MODAL ── */
+.ra-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13,27,42,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+.ra-overlay.open { display: flex; }
+
+.ra-modal {
+  background: var(--navy-mid);
+  border: 1px solid var(--border);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+}
+
+.ra-modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--gold), transparent);
+}
+
+.ra-close {
+  position: absolute;
+  top: 16px; right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.ra-close:hover { color: var(--cream); }
+
+.ra-modal h3 {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+
+.ra-modal p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.ra-field {
+  margin-bottom: 16px;
+}
+
+.ra-field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.ra-field input, .ra-field select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--navy);
+  border: 1px solid var(--border);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.ra-field input::placeholder { color: var(--text-muted); opacity: 0.5; }
+.ra-field input:focus, .ra-field select:focus { border-color: var(--gold); }
+.ra-field select option { background: var(--navy); color: var(--cream); }
+
+.ra-submit {
+  width: 100%;
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  border: none;
+  padding: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.ra-submit:hover { background: var(--gold-light); }
+.ra-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ra-success {
+  text-align: center;
+  padding: 20px 0;
+}
+.ra-success .checkmark {
+  font-size: 2.5rem;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.ra-success h3 {
+  text-align: center;
+}
+.ra-success p {
+  text-align: center;
+  margin-bottom: 0;
+}
+
 /* ── ANIMATIONS ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
@@ -1378,7 +1498,117 @@ footer {
   </div>
 </footer>
 
+<!-- REQUEST ACCESS MODAL -->
+<div class="ra-overlay" id="raOverlay" role="dialog" aria-modal="true" aria-label="Request Access">
+  <div class="ra-modal">
+    <button class="ra-close" id="raClose" aria-label="Close">&times;</button>
+    <div id="raForm">
+      <h3>Request Access</h3>
+      <p>Join the private beta. We'll reach out within 48 hours.</p>
+      <form id="raFormEl" novalidate>
+        <div class="ra-field">
+          <label for="raName">Full Name</label>
+          <input type="text" id="raName" placeholder="Jane Doe" required>
+        </div>
+        <div class="ra-field">
+          <label for="raEmail">Work Email</label>
+          <input type="email" id="raEmail" placeholder="[email]" required>
+        </div>
+        <div class="ra-field">
+          <label for="raCompany">Company / Organization</label>
+          <input type="text" id="raCompany" placeholder="Acme Policy Group">
+        </div>
+        <div class="ra-field">
+          <label for="raRole">Role</label>
+          <select id="raRole">
+            <option value="">Select your role</option>
+            <option value="lobbyist">Lobbyist</option>
+            <option value="legislative_aide">Legislative Aide</option>
+            <option value="attorney">Attorney</option>
+            <option value="planner">Urban Planner</option>
+            <option value="government_affairs">Government Affairs</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <button type="submit" class="ra-submit" id="raSubmit">Submit Request</button>
+      </form>
+    </div>
+    <div id="raSuccess" class="ra-success" style="display:none;">
+      <div class="checkmark">✓</div>
+      <h3>You're on the list.</h3>
+      <p>We'll be in touch soon with your beta invite.</p>
+    </div>
+  </div>
+</div>
+
 <script>
+// ── Request Access Modal + PostHog ──
+(function() {
+  const overlay = document.getElementById('raOverlay');
+  const closeBtn = document.getElementById('raClose');
+  const form = document.getElementById('raFormEl');
+  const formDiv = document.getElementById('raForm');
+  const successDiv = document.getElementById('raSuccess');
+
+  // Open modal on any .request-access-btn click
+  document.querySelectorAll('.request-access-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      overlay.classList.add('open');
+    });
+  });
+
+  // Close modal
+  function closeModal() { overlay.classList.remove('open'); }
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  // Submit
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var name = document.getElementById('raName').value.trim();
+    var email = document.getElementById('raEmail').value.trim();
+    var company = document.getElementById('raCompany').value.trim();
+    var role = document.getElementById('raRole').value;
+
+    if (!name || !email) return;
+
+    // Identify the visitor in PostHog (creates a person profile)
+    posthog.identify(email, {
+      name: name,
+      email: email,
+      company: company,
+      role: role
+    });
+
+    // Capture the request access event with properties
+    posthog.capture('request_access_submitted', {
+      name: name,
+      email: email,
+      company: company,
+      role: role,
+      source_url: window.location.href
+    });
+
+    // Show success state
+    formDiv.style.display = 'none';
+    successDiv.style.display = 'block';
+
+    // Auto-close after 3s
+    setTimeout(function() {
+      closeModal();
+      // Reset for next open
+      setTimeout(function() {
+        formDiv.style.display = 'block';
+        successDiv.style.display = 'none';
+        form.reset();
+      }, 300);
+    }, 3000);
+  });
+})();
+
 // Intersection observer for scroll animations
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry, i) => {
