@@ -1588,6 +1588,10 @@ footer {
 
     if (!name || !email) return;
 
+    // Disable button to prevent double-submit
+    var submitBtn = document.getElementById('raSubmit');
+    submitBtn.disabled = true;
+
     // Identify the visitor in PostHog (creates a person profile)
     posthog.identify(email, {
       name: name,
@@ -1597,28 +1601,35 @@ footer {
     });
 
     // Capture the request access event with properties
+    // Use the callback to ensure the event is flushed before transitioning the UI
     posthog.capture('request_access_submitted', {
       name: name,
       email: email,
       company: company,
       role: role,
       source_url: window.location.href
-    });
+    }, { send_instantly: true });
 
-    // Show success state
-    formDiv.style.display = 'none';
-    successDiv.style.display = 'block';
+    function showSuccess() {
+      // Show success state
+      formDiv.style.display = 'none';
+      successDiv.style.display = 'block';
+      submitBtn.disabled = false;
 
-    // Auto-close after 3s
-    setTimeout(function() {
-      closeModal();
-      // Reset for next open
+      // Auto-close after 3s
       setTimeout(function() {
-        formDiv.style.display = 'block';
-        successDiv.style.display = 'none';
-        form.reset();
-      }, 300);
-    }, 3000);
+        closeModal();
+        // Reset for next open
+        setTimeout(function() {
+          formDiv.style.display = 'block';
+          successDiv.style.display = 'none';
+          form.reset();
+        }, 300);
+      }, 3000);
+    }
+
+    // Give PostHog a moment to flush, then show success
+    setTimeout(showSuccess, 300);
   });
 })();
 
