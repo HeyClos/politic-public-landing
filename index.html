@@ -11,10 +11,9 @@
   posthog.init('phc_wsubJufTw7NSEtUsdNKnhYEmszH2p28aZtzfuJPEkxP5', {
     api_host: 'https://us.i.posthog.com',
     defaults: '2026-01-30',
-    person_profiles: 'always',
+    person_profiles: 'identified_only',
     opt_in_site_apps: true
   });
-  posthog.debug(true);
 </script>
 <style>
 :root {
@@ -1587,26 +1586,9 @@ footer {
     if (e.target === overlay) closeModal();
   });
 
-  // Helper: run callback once PostHog is fully loaded
-  function whenPostHogReady(callback) {
-    if (window.posthog && window.posthog.__loaded) {
-      callback(window.posthog);
-    } else {
-      // Poll until the real library has loaded
-      var attempts = 0;
-      var interval = setInterval(function() {
-        attempts++;
-        if (window.posthog && window.posthog.__loaded) {
-          clearInterval(interval);
-          callback(window.posthog);
-        } else if (attempts > 50) { // give up after ~5s
-          clearInterval(interval);
-          console.error('PostHog failed to load');
-          callback(null);
-        }
-      }, 100);
-    }
-  }
+  // ── Supabase config ──
+  var SUPABASE_URL = 'https://xikycgwunpahzrmgpwwb.supabase.co';
+  var SUPABASE_ANON_KEY = 'sb_publishable_1CUpaSChFC9SKBNmzyfH3A_eDCOuvAf';
 
   // Submit
   form.addEventListener('submit', function(e) {
@@ -1621,24 +1603,29 @@ footer {
     var submitBtn = document.getElementById('raSubmit');
     submitBtn.disabled = true;
 
-    whenPostHogReady(function(ph) {
-      if (ph) {
-        ph.identify(email, {
-          email: email,
-          name: name,
-          company: company,
-          role: role
-        });
+    // Insert into Supabase
+    fetch(SUPABASE_URL + '/rest/v1/request_access', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        company: company,
+        role: role,
+        source_url: window.location.href
+      })
+    })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Submission failed');
 
-        ph.capture('request_access_submitted', {
-          $set: {
-            email: email,
-            name: name,
-            company: company,
-            role: role
-          },
-          source_url: window.location.href
-        });
+      // Track the event in PostHog (analytics only, no person profile)
+      if (window.posthog) {
+        posthog.capture('request_access_submitted');
       }
 
       // Show success state
@@ -1646,7 +1633,6 @@ footer {
       successDiv.style.display = 'block';
       submitBtn.disabled = false;
 
-      // Auto-close after 3s
       setTimeout(function() {
         closeModal();
         setTimeout(function() {
@@ -1655,6 +1641,11 @@ footer {
           form.reset();
         }, 3000);
       }, 3000);
+    })
+    .catch(function(err) {
+      console.error('Request access error:', err);
+      submitBtn.disabled = false;
+      alert('Something went wrong. Please try again.');
     });
   });
 })();
