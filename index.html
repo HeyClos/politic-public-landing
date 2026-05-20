@@ -114,7 +114,6 @@ nav {
 /* ── HERO ── */
 .hero {
   position: relative;
-  min-height: 100vh;
   display: flex;
   align-items: center;
   padding: 120px 60px 80px;
@@ -162,6 +161,23 @@ nav {
   box-shadow: 0 30px 80px rgba(0,0,0,0.45);
   opacity: 0;
   animation: fadeUp 0.8s ease 0.5s forwards;
+  /* design-size scaler: shot internals are sized for an 880x550 canvas
+     and proportionally scaled to the actual frame width via JS-driven
+     --montage-scale (see ResizeObserver block at the end of the script). */
+  --montage-design-width: 880px;
+  --montage-design-height: 550px;
+  --montage-scale: 1;
+}
+
+.hero-montage-scaler {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--montage-design-width);
+  height: var(--montage-design-height);
+  transform-origin: top left;
+  transform: scale(var(--montage-scale));
+  pointer-events: none;
 }
 
 .hero-montage {
@@ -170,6 +186,16 @@ nav {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+}
+
+/* Override the IIFE's inline `max-width:Xvw` caps on shot children
+   (originally added so full-bleed rendering would shrink on narrow
+   viewports). Inside the design-size scaler those vw caps misfire,
+   collapsing rows/grids well below the design width and leaving the
+   frame mostly empty. The scaler handles responsiveness; let the
+   shot internals render at their fixed pixel widths. */
+.hero-montage [style*="vw"] {
+  max-width: none !important;
 }
 
 .hero-montage-frame::before,
@@ -207,14 +233,14 @@ nav {
 
 .hero-frame-caption {
   position: absolute;
-  top: 18px;
-  left: 18px;
+  bottom: 18px;
+  right: 18px;
   z-index: 5;
   font-family: var(--mono);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(201,168,76,0.7);
+  color: rgba(201,168,76,0.55);
   pointer-events: none;
 }
 
@@ -1304,7 +1330,9 @@ footer {
       </div>
     </div>
     <div class="hero-montage-frame">
-      <div class="hero-montage" id="heroMontage" aria-hidden="true"></div>
+      <div class="hero-montage-scaler">
+        <div class="hero-montage" id="heroMontage" aria-hidden="true"></div>
+      </div>
       <span class="hero-frame-caption">Chamber Display · Sample Feed</span>
       <span class="hero-frame-tick tl" aria-hidden="true"></span>
       <span class="hero-frame-tick tr" aria-hidden="true"></span>
@@ -1537,7 +1565,7 @@ footer {
   <div class="section-inner">
     <span class="section-label">Pricing</span>
     <h2 class="section-title">Goodbye meeting minutes.<br>Move in <em>seconds.</em></h2>
-    <p class="section-body">Now in private beta — request access for an invite.</p>
+    <p class="section-body">Now in private beta — request access for early entry.</p>
     <div class="plans-grid-wrap">
     <div class="plans-grid">
       <div class="plan">
@@ -1564,7 +1592,7 @@ footer {
           <li>Real-time push alerts</li>
           <li>Unlimited issue filters</li>
           <li>Full archive + export</li>
-          <li>Priority delivery (&lt; 2hrs)</li>
+          <li>Priority delivery (&lt; 2 hours)</li>
           <li>Client-ready PDF exports</li>
         </ul>
         <a href="#" class="plan-cta request-access-btn">Request Access</a>
@@ -2426,7 +2454,12 @@ window.addEventListener('scroll', () => {
     if (pickIdx === -1) pickIdx = 0;
     shotIdx = pickIdx;
     setShot(pickIdx);
-    shots[pickIdx].update(0.55);
+    // p=0 leaves all agenda items un-struck — reads as "the agenda is
+    // displayed", a calm static frame. Previously p=0.55 left 4 of 9
+    // rows mid-strikethrough, which read as a partial/loading state
+    // once the montage moved from a 22%-opacity background to the
+    // full-opacity centerpiece.
+    shots[pickIdx].update(0);
     flash.style.opacity = '0';
   }
 
@@ -2463,6 +2496,28 @@ window.addEventListener('scroll', () => {
   }
 
   decide();
+})();
+
+// Hero montage scaler: drives --montage-scale on .hero-montage-frame
+// so the IIFE's fixed-pixel shot internals (designed for an 880x550
+// canvas) render at the correct size inside the contained 16:10 frame
+// at any viewport width. Self-contained — does not touch the IIFE.
+(function(){
+  var frame = document.querySelector('.hero-montage-frame');
+  if (!frame) return;
+  var DESIGN_W = 880;
+  function update() {
+    var w = frame.clientWidth;
+    if (!w) return;
+    frame.style.setProperty('--montage-scale', String(w / DESIGN_W));
+  }
+  if ('ResizeObserver' in window) {
+    var ro = new ResizeObserver(update);
+    ro.observe(frame);
+  } else {
+    window.addEventListener('resize', update);
+  }
+  update();
 })();
 </script>
 </body>
