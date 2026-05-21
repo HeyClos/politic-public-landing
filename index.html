@@ -114,7 +114,6 @@ nav {
 /* ── HERO ── */
 .hero {
   position: relative;
-  min-height: 100vh;
   display: flex;
   align-items: center;
   padding: 120px 60px 80px;
@@ -125,18 +124,60 @@ nav {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(to right, rgba(201,168,76,0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(201,168,76,0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(201,168,76,0.03) 1px, transparent 1px);
   background-size: 80px 80px;
-  z-index: 2;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .hero-bg-gradient {
   position: absolute;
   top: -200px; right: -200px;
   width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
-  z-index: 3;
+  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-stage {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(40px, 5vw, 80px);
+  align-items: center;
+}
+
+.hero-montage-frame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--navy);
+  border: 1px solid rgba(201,168,76,0.35);
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.5s forwards;
+  /* design-size scaler: shot internals are sized for an 880x550 canvas
+     and proportionally scaled to the actual frame width via JS-driven
+     --montage-scale (see ResizeObserver block at the end of the script). */
+  --montage-design-width: 880px;
+  --montage-design-height: 550px;
+  --montage-scale: 1;
+}
+
+.hero-montage-scaler {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--montage-design-width);
+  height: var(--montage-design-height);
+  transform-origin: top left;
+  transform: scale(var(--montage-scale));
+  pointer-events: none;
 }
 
 .hero-montage {
@@ -144,25 +185,69 @@ nav {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.22;
-  mix-blend-mode: screen;
   overflow: hidden;
 }
 
-.hero-montage-scrim {
+/* Override the IIFE's inline `max-width:Xvw` caps on shot children
+   (originally added so full-bleed rendering would shrink on narrow
+   viewports). Inside the design-size scaler those vw caps misfire,
+   collapsing rows/grids well below the design width and leaving the
+   frame mostly empty. The scaler handles responsiveness; let the
+   shot internals render at their fixed pixel widths. */
+.hero-montage [style*="vw"] {
+  max-width: none !important;
+}
+
+.hero-montage-frame::before,
+.hero-montage-frame::after {
+  content: '';
   position: absolute;
   inset: 0;
-  z-index: 1;
   pointer-events: none;
+  z-index: 2;
+}
+.hero-montage-frame::before {
+  /* subtle inner vignette to soften the frame edges */
   background:
-    linear-gradient(to right, rgba(13,27,42,0.78) 0%, rgba(13,27,42,0.55) 38%, rgba(13,27,42,0.15) 70%, rgba(13,27,42,0) 100%),
-    linear-gradient(to bottom, rgba(13,27,42,0.55) 0%, rgba(13,27,42,0) 22%, rgba(13,27,42,0) 78%, rgba(13,27,42,0.7) 100%);
+    linear-gradient(to bottom, rgba(13,27,42,0.35) 0%, rgba(13,27,42,0) 12%, rgba(13,27,42,0) 88%, rgba(13,27,42,0.4) 100%);
+}
+.hero-montage-frame::after {
+  /* faint inner stroke for crispness over the gold edge */
+  box-shadow: inset 0 0 0 1px rgba(201,168,76,0.08);
+}
+
+.hero-frame-tick {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--gold);
+  border-style: solid;
+  opacity: 0.6;
+  z-index: 3;
+  pointer-events: none;
+}
+.hero-frame-tick.tl { top: 6px; left: 6px; border-width: 1px 0 0 1px; }
+.hero-frame-tick.tr { top: 6px; right: 6px; border-width: 1px 1px 0 0; }
+.hero-frame-tick.bl { bottom: 6px; left: 6px; border-width: 0 0 1px 1px; }
+.hero-frame-tick.br { bottom: 6px; right: 6px; border-width: 0 1px 1px 0; }
+
+.hero-frame-caption {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  z-index: 5;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.55);
+  pointer-events: none;
 }
 
 .hero-content {
   position: relative;
-  z-index: 10;
-  max-width: 780px;
+  z-index: 2;
+  max-width: 100%;
 }
 
 .hero-tag {
@@ -181,7 +266,7 @@ nav {
 
 .hero h1 {
   font-family: var(--serif);
-  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-size: clamp(2.5rem, 4.5vw, 4.25rem);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.01em;
@@ -197,11 +282,11 @@ nav {
 
 .hero-sub {
   font-family: var(--sans);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: var(--text-muted);
-  max-width: 540px;
-  line-height: 1.7;
-  margin-bottom: 48px;
+  max-width: 520px;
+  line-height: 1.65;
+  margin-bottom: 40px;
   opacity: 0;
   animation: fadeUp 0.7s ease 0.4s forwards;
 }
@@ -251,6 +336,7 @@ nav {
 .hero-scroll-hint {
   position: absolute;
   bottom: 40px; left: 60px;
+  z-index: 3;
   font-family: var(--mono);
   font-size: 0.65rem;
   letter-spacing: 0.15em;
@@ -1187,7 +1273,16 @@ footer {
 @media (max-width: 900px) {
   nav { padding: 18px 24px; }
   .nav-links { display: none; }
-  .hero { padding: 100px 24px 60px; }
+  .hero {
+    min-height: auto;
+    padding: 100px 24px 40px;
+  }
+  .hero-stage {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .hero-montage-frame { aspect-ratio: 16 / 10; }
+  .hero-scroll-hint { display: none; }
   .stats-bar { grid-template-columns: 1fr 1fr; padding: 24px; }
   .section-inner { padding: 60px 24px; }
   .pain-grid { grid-template-columns: 1fr; }
@@ -1199,11 +1294,10 @@ footer {
   .footer-inner { grid-template-columns: 1fr 1fr; }
   .cta-band { padding: 60px 24px; }
   footer { padding: 40px 24px; }
-  .hero-montage { opacity: 0.14; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-montage { opacity: 0.16; }
+  .hero-montage-frame { animation: none; opacity: 1; }
 }
 </style>
 </head>
@@ -1223,17 +1317,27 @@ footer {
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-montage" id="heroMontage" aria-hidden="true"></div>
-  <div class="hero-montage-scrim" aria-hidden="true"></div>
   <div class="hero-bg-lines"></div>
   <div class="hero-bg-gradient"></div>
-  <div class="hero-content">
-    <div class="hero-tag">Private Beta — Now Accepting Requests</div>
-    <h1>The record moves fast.<br>We read it <em>faster.</em></h1>
-    <p class="hero-sub">Votes, amendments, and motions — distilled into clean briefs before the narrative sets in. PoliticPublic gives lobbyists, legislators, and land use professionals the record while it still matters.</p>
-    <div class="hero-actions">
-      <a href="#plans" class="btn-primary request-access-btn">Request Access</a>
-      <a href="#sample" class="btn-secondary">See a Sample Brief</a>
+  <div class="hero-stage">
+    <div class="hero-content">
+      <div class="hero-tag">Now in Private Beta</div>
+      <h1>The record moves fast.<br>We read it <em>faster.</em></h1>
+      <p class="hero-sub">Votes, amendments, and motions — distilled into clean briefs before the narrative sets in.</p>
+      <div class="hero-actions">
+        <a href="#plans" class="btn-primary request-access-btn">Request Access</a>
+        <a href="#sample" class="btn-secondary">See a Sample Brief</a>
+      </div>
+    </div>
+    <div class="hero-montage-frame">
+      <div class="hero-montage-scaler">
+        <div class="hero-montage" id="heroMontage" aria-hidden="true"></div>
+      </div>
+      <span class="hero-frame-caption">Chamber Display · Sample Feed</span>
+      <span class="hero-frame-tick tl" aria-hidden="true"></span>
+      <span class="hero-frame-tick tr" aria-hidden="true"></span>
+      <span class="hero-frame-tick bl" aria-hidden="true"></span>
+      <span class="hero-frame-tick br" aria-hidden="true"></span>
     </div>
   </div>
   <span class="hero-scroll-hint">Scroll to explore</span>
@@ -1264,22 +1368,22 @@ footer {
 <div class="stats-bar" id="statsBar">
   <div class="stat-item">
     <div class="stat-number">4</div>
-    <div class="stat-label">Jurisdictions Tracked (request yours today)</div>
+    <div class="stat-label">Jurisdictions in Beta</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number">&lt; 2hrs</div>
-    <div class="stat-label">From Gavel to Inbox</div>
+    <div class="stat-number">&lt; 2 Hours</div>
+    <div class="stat-label">Gavel to Inbox</div>
   </div>
   <div class="stat-item">
     <div class="stat-number">98%</div>
-    <div class="stat-label">Coverage Accuracy</div>
+    <div class="stat-label">Vote Capture Accuracy</div>
   </div>
 </div>
 
 <!-- TRUST LOGOS -->
 <section class="trust-section" aria-label="Backed by leading organizations">
   <div class="trust-inner">
-    <div class="trust-label">Backed &amp; Supported By</div>
+    <div class="trust-label">Backed By</div>
     <div class="trust-logos">
       <!-- AWS -->
       <a href="https://aws.amazon.com" class="trust-logo" target="_blank" rel="noopener noreferrer" aria-label="Amazon Web Services">
@@ -1353,7 +1457,7 @@ footer {
           </div>
           <h3>Capture</h3>
         </div>
-        <p>We pull live streams, official transcripts, and published minutes from 4 councils (request yours today) as sessions happen — no lag, no gaps.</p>
+        <p>We pull live streams, official transcripts, and published minutes from every council we cover, as sessions happen — no lag, no gaps.</p>
       </div>
       <div class="step">
         <div class="step-header">
@@ -1461,7 +1565,7 @@ footer {
   <div class="section-inner">
     <span class="section-label">Pricing</span>
     <h2 class="section-title">Goodbye meeting minutes.<br>Move in <em>seconds.</em></h2>
-    <p class="section-body">Now in private beta. Request access to get early entry.</p>
+    <p class="section-body">Now in private beta — request access for early entry.</p>
     <div class="plans-grid-wrap">
     <div class="plans-grid">
       <div class="plan">
@@ -1488,7 +1592,7 @@ footer {
           <li>Real-time push alerts</li>
           <li>Unlimited issue filters</li>
           <li>Full archive + export</li>
-          <li>Priority delivery (&lt; 2hrs)</li>
+          <li>Priority delivery (&lt; 2 hours)</li>
           <li>Client-ready PDF exports</li>
         </ul>
         <a href="#" class="plan-cta request-access-btn">Request Access</a>
@@ -1517,7 +1621,7 @@ footer {
 <div class="cta-band">
   <div class="cta-band-inner">
     <h2>What passed today shapes tomorrow.<br>So can you.</h2>
-    <p>PoliticPublic is in private beta. Request early access and be first on the wire when we open the doors.</p>
+    <p>PoliticPublic is in private beta. Request access — early entry, no waitlist.</p>
     <a href="#plans" class="btn-dark request-access-btn">Request Access</a>
   </div>
 </div>
@@ -1539,8 +1643,8 @@ footer {
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 PoliticPublic · The Motion Before the Headline</span>
-    <span>Intelligence before interpretation</span>
+    <span>© 2026 PoliticPublic</span>
+    <span>The Motion Before the Headline</span>
   </div>
 </footer>
 
@@ -2350,7 +2454,12 @@ window.addEventListener('scroll', () => {
     if (pickIdx === -1) pickIdx = 0;
     shotIdx = pickIdx;
     setShot(pickIdx);
-    shots[pickIdx].update(0.55);
+    // p=0 leaves all agenda items un-struck — reads as "the agenda is
+    // displayed", a calm static frame. Previously p=0.55 left 4 of 9
+    // rows mid-strikethrough, which read as a partial/loading state
+    // once the montage moved from a 22%-opacity background to the
+    // full-opacity centerpiece.
+    shots[pickIdx].update(0);
     flash.style.opacity = '0';
   }
 
@@ -2387,6 +2496,28 @@ window.addEventListener('scroll', () => {
   }
 
   decide();
+})();
+
+// Hero montage scaler: drives --montage-scale on .hero-montage-frame
+// so the IIFE's fixed-pixel shot internals (designed for an 880x550
+// canvas) render at the correct size inside the contained 16:10 frame
+// at any viewport width. Self-contained — does not touch the IIFE.
+(function(){
+  var frame = document.querySelector('.hero-montage-frame');
+  if (!frame) return;
+  var DESIGN_W = 880;
+  function update() {
+    var w = frame.clientWidth;
+    if (!w) return;
+    frame.style.setProperty('--montage-scale', String(w / DESIGN_W));
+  }
+  if ('ResizeObserver' in window) {
+    var ro = new ResizeObserver(update);
+    ro.observe(frame);
+  } else {
+    window.addEventListener('resize', update);
+  }
+  update();
 })();
 </script>
 </body>
