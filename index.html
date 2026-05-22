@@ -65,10 +65,16 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 60px;
+  padding: 20px clamp(20px, 3.5vw, 56px);
+  background: transparent;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+nav.is-scrolled {
   background: rgba(13,27,42,0.85);
   backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: var(--border);
 }
 
 .nav-logo {
@@ -111,73 +117,25 @@ nav {
 }
 .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
 
-/* ── HERO ── */
+/* ── HERO (full-bleed cinematic frame) ── */
 .hero {
   position: relative;
-  display: flex;
-  align-items: center;
-  padding: 120px 60px 80px;
+  height: 100vh;
+  min-height: 640px;
+  padding: clamp(12px, 1.5vw, 24px);
   overflow: hidden;
-}
-
-.hero-bg-lines {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, rgba(201,168,76,0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(201,168,76,0.03) 1px, transparent 1px);
-  background-size: 80px 80px;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.hero-bg-gradient {
-  position: absolute;
-  top: -200px; right: -200px;
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
-  z-index: 1;
-  pointer-events: none;
-}
-
-.hero-stage {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(40px, 5vw, 80px);
-  align-items: center;
-}
-
-.hero-montage-frame {
-  position: relative;
-  aspect-ratio: 16 / 10;
   background: var(--navy);
-  border: 1px solid rgba(201,168,76,0.35);
-  overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
-  opacity: 0;
-  animation: fadeUp 0.8s ease 0.5s forwards;
-  /* design-size scaler: shot internals are sized for an 880x550 canvas
-     and proportionally scaled to the actual frame width via JS-driven
-     --montage-scale (see ResizeObserver block at the end of the script). */
-  --montage-design-width: 880px;
-  --montage-design-height: 550px;
-  --montage-scale: 1;
 }
 
-.hero-montage-scaler {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--montage-design-width);
-  height: var(--montage-design-height);
-  transform-origin: top left;
-  transform: scale(var(--montage-scale));
-  pointer-events: none;
+.hero-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: clamp(16px, 1.6vw, 28px);
+  overflow: hidden;
+  background: #07111c;
+  border: 1px solid rgba(201,168,76,0.18);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.55);
 }
 
 .hero-montage {
@@ -188,66 +146,124 @@ nav {
   overflow: hidden;
 }
 
-/* Override the IIFE's inline `max-width:Xvw` caps on shot children
-   (originally added so full-bleed rendering would shrink on narrow
-   viewports). Inside the design-size scaler those vw caps misfire,
-   collapsing rows/grids well below the design width and leaving the
-   frame mostly empty. The scaler handles responsiveness; let the
-   shot internals render at their fixed pixel widths. */
-.hero-montage [style*="vw"] {
-  max-width: none !important;
-}
-
-.hero-montage-frame::before,
-.hero-montage-frame::after {
+/* gradient overlay so wordmark/copy stays legible over montage */
+.hero-frame::before {
   content: '';
   position: absolute;
   inset: 0;
-  pointer-events: none;
   z-index: 2;
-}
-.hero-montage-frame::before {
-  /* subtle inner vignette to soften the frame edges */
+  pointer-events: none;
   background:
-    linear-gradient(to bottom, rgba(13,27,42,0.35) 0%, rgba(13,27,42,0) 12%, rgba(13,27,42,0) 88%, rgba(13,27,42,0.4) 100%);
-}
-.hero-montage-frame::after {
-  /* faint inner stroke for crispness over the gold edge */
-  box-shadow: inset 0 0 0 1px rgba(201,168,76,0.08);
+    linear-gradient(to bottom, rgba(13,27,42,0.45) 0%, rgba(13,27,42,0) 28%, rgba(13,27,42,0) 55%, rgba(13,27,42,0.85) 100%);
 }
 
-.hero-frame-tick {
+/* faint film grain overlay */
+.hero-frame::after {
+  content: '';
   position: absolute;
-  width: 10px;
-  height: 10px;
-  border-color: var(--gold);
-  border-style: solid;
-  opacity: 0.6;
-  z-index: 3;
+  inset: 0;
+  z-index: 2;
   pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-.hero-frame-tick.tl { top: 6px; left: 6px; border-width: 1px 0 0 1px; }
-.hero-frame-tick.tr { top: 6px; right: 6px; border-width: 1px 1px 0 0; }
-.hero-frame-tick.bl { bottom: 6px; left: 6px; border-width: 0 0 1px 1px; }
-.hero-frame-tick.br { bottom: 6px; right: 6px; border-width: 0 1px 1px 0; }
 
 .hero-frame-caption {
   position: absolute;
-  bottom: 18px;
-  right: 18px;
+  top: clamp(20px, 2.5vw, 40px);
+  right: clamp(20px, 2.5vw, 40px);
   z-index: 5;
   font-family: var(--mono);
   font-size: 0.6rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(201,168,76,0.55);
+  color: rgba(245,240,232,0.45);
   pointer-events: none;
 }
 
 .hero-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  padding: clamp(20px, 3.5vw, 56px);
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  align-items: end;
+  gap: clamp(20px, 4vw, 60px);
+}
+
+.hero-wordmark {
   position: relative;
-  z-index: 2;
-  max-width: 100%;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(64px, 14vw, 240px);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  color: var(--cream);
+  margin: 0;
+  display: block;
+}
+
+.hero-wordmark .wm-line {
+  display: block;
+  position: relative;
+  white-space: nowrap;
+}
+
+.hero-wordmark .wm-line + .wm-line {
+  margin-top: -0.05em;
+}
+
+.hero-wordmark .wm-letter {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  position: relative;
+}
+
+.hero-wordmark .wm-letter > span {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: wmPullUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-wordmark em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-wordmark .wm-star {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 0.06em;
+  margin-top: 0.05em;
+  font-size: 0.3em;
+  font-weight: 400;
+  color: var(--gold);
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes wmPullUp {
+  from { transform: translateY(110%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.hero-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+  max-width: 380px;
+  padding-bottom: 0.3em;
 }
 
 .hero-tag {
@@ -257,47 +273,32 @@ nav {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--gold);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(201,168,76,0.4);
   padding: 6px 14px;
-  margin-bottom: 36px;
+  background: rgba(13,27,42,0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   opacity: 0;
-  animation: fadeUp 0.6s ease 0.1s forwards;
-}
-
-.hero h1 {
-  font-family: var(--serif);
-  font-size: clamp(2.5rem, 4.5vw, 4.25rem);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  color: var(--cream);
-  margin-bottom: 28px;
-  opacity: 0;
-  animation: fadeUp 0.7s ease 0.25s forwards;
-}
-.hero h1 em {
-  font-style: italic;
-  color: var(--gold);
+  animation: fadeUp 0.6s ease 0.3s forwards;
 }
 
 .hero-sub {
   font-family: var(--sans);
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  max-width: 520px;
-  line-height: 1.65;
-  margin-bottom: 40px;
+  font-size: 0.95rem;
+  color: rgba(245,240,232,0.78);
+  line-height: 1.45;
+  margin: 0;
   opacity: 0;
-  animation: fadeUp 0.7s ease 0.4s forwards;
+  animation: fadeUp 0.7s ease 1.4s forwards;
 }
 
 .hero-actions {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
   flex-wrap: wrap;
   opacity: 0;
-  animation: fadeUp 0.7s ease 0.55s forwards;
+  animation: fadeUp 0.7s ease 1.6s forwards;
 }
 
 .btn-primary {
@@ -307,7 +308,7 @@ nav {
   text-transform: uppercase;
   color: var(--navy);
   background: var(--gold);
-  padding: 16px 36px;
+  padding: 14px 28px;
   text-decoration: none;
   display: inline-block;
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
@@ -325,35 +326,16 @@ nav {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--cream);
-  padding: 16px 36px;
+  padding: 14px 28px;
   text-decoration: none;
   display: inline-block;
-  border: 1px solid var(--border);
-  transition: border-color 0.2s, color 0.2s;
+  border: 1px solid rgba(245,240,232,0.3);
+  background: rgba(13,27,42,0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
 }
 .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
-
-.hero-scroll-hint {
-  position: absolute;
-  bottom: 40px; left: 60px;
-  z-index: 3;
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  opacity: 0;
-  animation: fadeUp 0.6s ease 1s forwards;
-}
-.hero-scroll-hint::before {
-  content: '';
-  width: 40px; height: 1px;
-  background: var(--gold);
-  display: block;
-}
 
 /* ── TICKER ── */
 .ticker {
@@ -1271,18 +1253,20 @@ footer {
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
-  nav { padding: 18px 24px; }
+  nav { padding: 14px 20px; }
   .nav-links { display: none; }
   .hero {
-    min-height: auto;
-    padding: 100px 24px 40px;
+    height: auto;
+    min-height: 100vh;
+    padding: 12px;
   }
-  .hero-stage {
+  .hero-content {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 28px;
+    padding: 24px;
   }
-  .hero-montage-frame { aspect-ratio: 16 / 10; }
-  .hero-scroll-hint { display: none; }
+  .hero-side { max-width: none; }
+  .hero-wordmark { font-size: clamp(56px, 18vw, 140px); }
   .stats-bar { grid-template-columns: 1fr 1fr; padding: 24px; }
   .section-inner { padding: 60px 24px; }
   .pain-grid { grid-template-columns: 1fr; }
@@ -1297,7 +1281,9 @@ footer {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-montage-frame { animation: none; opacity: 1; }
+  .hero-wordmark .wm-letter > span { animation: none; transform: none; }
+  .hero-wordmark .wm-star { animation: none; opacity: 1; }
+  .hero-tag, .hero-sub, .hero-actions { animation: none; opacity: 1; }
 }
 </style>
 </head>
@@ -1317,30 +1303,26 @@ footer {
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg-lines"></div>
-  <div class="hero-bg-gradient"></div>
-  <div class="hero-stage">
+  <div class="hero-frame">
+    <div class="hero-montage" id="heroMontage" aria-hidden="true"></div>
+
+    <span class="hero-frame-caption">Chamber Display · Sample Feed</span>
+
     <div class="hero-content">
-      <div class="hero-tag">Now in Private Beta</div>
-      <h1>The record moves fast.<br>We read it <em>faster.</em></h1>
-      <p class="hero-sub">Votes, amendments, and motions — distilled into clean briefs before the narrative sets in.</p>
-      <div class="hero-actions">
-        <a href="#plans" class="btn-primary request-access-btn">Request Access</a>
-        <a href="#sample" class="btn-secondary">See a Sample Brief</a>
+      <h1 class="hero-wordmark" aria-label="PoliticPublic">
+        <span class="wm-line" data-word="Politic"></span>
+        <span class="wm-line" data-word="Public" data-star="1"></span>
+      </h1>
+      <div class="hero-side">
+        <div class="hero-tag">Now in Private Beta</div>
+        <p class="hero-sub">The record moves fast. We read it faster. Votes, amendments, and motions distilled into clean briefs before the narrative sets in.</p>
+        <div class="hero-actions">
+          <a href="#plans" class="btn-primary request-access-btn">Request Access</a>
+          <a href="#sample" class="btn-secondary">See a Sample Brief</a>
+        </div>
       </div>
-    </div>
-    <div class="hero-montage-frame">
-      <div class="hero-montage-scaler">
-        <div class="hero-montage" id="heroMontage" aria-hidden="true"></div>
-      </div>
-      <span class="hero-frame-caption">Chamber Display · Sample Feed</span>
-      <span class="hero-frame-tick tl" aria-hidden="true"></span>
-      <span class="hero-frame-tick tr" aria-hidden="true"></span>
-      <span class="hero-frame-tick bl" aria-hidden="true"></span>
-      <span class="hero-frame-tick br" aria-hidden="true"></span>
     </div>
   </div>
-  <span class="hero-scroll-hint">Scroll to explore</span>
 </section>
 
 <!-- TICKER -->
@@ -1791,11 +1773,48 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').forEach(el => observer.observe(el));
 
-// Smooth nav background
-window.addEventListener('scroll', () => {
-  document.querySelector('nav').style.borderBottomColor =
-    window.scrollY > 40 ? 'rgba(201,168,76,0.25)' : 'rgba(201,168,76,0.2)';
-});
+// Nav: add scrolled state once you've moved past the hero gutter
+(function(){
+  var navEl = document.querySelector('nav');
+  if (!navEl) return;
+  function onScroll() {
+    if (window.scrollY > 40) navEl.classList.add('is-scrolled');
+    else navEl.classList.remove('is-scrolled');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+// Hero wordmark: split each [data-word] into per-letter spans with
+// a staggered pull-up. The trailing asterisk fades in after the last
+// letter of the line that has [data-star].
+(function(){
+  var lines = document.querySelectorAll('.hero-wordmark .wm-line');
+  if (!lines.length) return;
+  var globalIdx = 0;
+  lines.forEach(function(line) {
+    var word = line.getAttribute('data-word') || '';
+    var hasStar = line.hasAttribute('data-star');
+    line.textContent = '';
+    word.split('').forEach(function(ch) {
+      var wrap = document.createElement('span');
+      wrap.className = 'wm-letter';
+      var inner = document.createElement('span');
+      inner.textContent = ch;
+      inner.style.animationDelay = (globalIdx * 0.06) + 's';
+      wrap.appendChild(inner);
+      line.appendChild(wrap);
+      globalIdx++;
+    });
+    if (hasStar) {
+      var star = document.createElement('span');
+      star.className = 'wm-star';
+      star.textContent = '*';
+      star.style.animationDelay = (globalIdx * 0.06 + 0.2) + 's';
+      line.appendChild(star);
+    }
+  });
+})();
 
 // Hero ambient council-meeting montage (vanilla port of supplied JSX)
 (function(){
@@ -1909,32 +1928,35 @@ window.addEventListener('scroll', () => {
 
   function shotRoot() {
     var d = document.createElement('div');
-    d.style.cssText = 'position:absolute;inset:0;padding:48px 64px;color:' + PRIMARY + ';font-family:' + FONT_MONO + ';box-sizing:border-box;';
+    d.style.cssText = 'position:absolute;inset:0;padding:clamp(40px,5vw,100px) clamp(40px,5vw,100px);color:' + PRIMARY + ';font-family:' + FONT_MONO + ';box-sizing:border-box;';
     return d;
   }
 
   function metaLine(text) {
     var d = document.createElement('div');
-    d.style.cssText = 'font-family:' + FONT_MONO + ';font-size:11px;letter-spacing:0.22em;color:' + PRIMARY_DIM + ';margin-bottom:18px;text-transform:uppercase;';
+    d.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(11px,0.85vw,14px);letter-spacing:0.25em;color:' + PRIMARY_DIM + ';margin-bottom:clamp(20px,2.5vw,40px);text-transform:uppercase;';
     d.textContent = text;
     return d;
   }
 
   function ShotVoteTally() {
     var root = shotRoot();
+    root.style.display = 'flex';
+    root.style.flexDirection = 'column';
+    root.style.justifyContent = 'center';
     root.appendChild(metaLine('CHAMBER \u00B7 VOTE TALLY'));
     var grid = document.createElement('div');
-    grid.style.cssText = 'display:flex;gap:64px;align-items:flex-end;margin-top:24px;';
+    grid.style.cssText = 'display:flex;gap:clamp(40px,8vw,140px);align-items:flex-end;';
     var labels = ['YEA', 'NAY', 'ABS'];
     var nums = [];
     for (var i = 0; i < 3; i++) {
       var cell = document.createElement('div');
       cell.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;';
       var num = document.createElement('div');
-      num.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:120px;line-height:1;font-weight:600;color:' + PRIMARY + ';';
+      num.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(120px,18vw,280px);line-height:0.9;font-weight:600;color:' + PRIMARY + ';font-variant-numeric:tabular-nums;letter-spacing:-0.04em;';
       num.textContent = '0';
       var lbl = document.createElement('div');
-      lbl.style.cssText = 'font-family:' + FONT_MONO + ';font-size:12px;letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:8px;';
+      lbl.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(12px,1vw,16px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(8px,1vw,14px);';
       lbl.textContent = labels[i];
       cell.appendChild(num); cell.appendChild(lbl);
       grid.appendChild(cell);
@@ -1959,11 +1981,11 @@ window.addEventListener('scroll', () => {
     var root = shotRoot();
     root.appendChild(metaLine('ROLL CALL \u00B7 ' + ROLL.length + ' OF ' + ROLL.length));
     var list = document.createElement('div');
-    list.style.cssText = 'display:flex;flex-direction:column;gap:6px;font-size:13px;letter-spacing:0.06em;';
+    list.style.cssText = 'display:flex;flex-direction:column;gap:clamp(6px,0.7vw,10px);font-size:clamp(14px,1.4vw,22px);letter-spacing:0.06em;width:min(720px,70vw);';
     var rows = [];
     for (var i = 0; i < ROLL.length; i++) {
       var row = document.createElement('div');
-      row.style.cssText = 'display:flex;justify-content:space-between;width:480px;max-width:50vw;border-bottom:1px dotted ' + PRIMARY_FAINT + ';padding-bottom:4px;opacity:0;transition:opacity 0.18s linear;';
+      row.style.cssText = 'display:flex;justify-content:space-between;border-bottom:1px dotted ' + PRIMARY_FAINT + ';padding-bottom:clamp(4px,0.5vw,8px);opacity:0;transition:opacity 0.18s linear;';
       var name = document.createElement('span');
       name.textContent = ROLL[i].name;
       var status = document.createElement('span');
@@ -1996,10 +2018,10 @@ window.addEventListener('scroll', () => {
     root.style.alignItems = 'flex-start';
     root.appendChild(metaLine('MOTION'));
     var big = document.createElement('div');
-    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:140px;line-height:1;font-weight:600;color:' + PRIMARY + ';letter-spacing:-0.02em;opacity:0;';
+    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(120px,18vw,300px);line-height:0.85;font-weight:600;color:' + PRIMARY + ';letter-spacing:-0.05em;opacity:0;';
     big.textContent = 'PASSED';
     var sub = document.createElement('div');
-    sub.style.cssText = 'font-family:' + FONT_MONO + ';font-size:14px;letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:14px;opacity:0;';
+    sub.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(13px,1.1vw,18px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(14px,1.5vw,22px);opacity:0;';
     sub.textContent = '7 \u2014 2 \u00B7 CARRIED';
     root.appendChild(big);
     root.appendChild(sub);
@@ -2016,13 +2038,13 @@ window.addEventListener('scroll', () => {
     var root = shotRoot();
     root.appendChild(metaLine('FY BUDGET \u00B7 GENERAL FUND'));
     var grid = document.createElement('div');
-    grid.style.cssText = 'display:flex;flex-direction:column;gap:14px;width:560px;max-width:60vw;margin-top:8px;';
+    grid.style.cssText = 'display:flex;flex-direction:column;gap:clamp(14px,1.6vw,24px);width:min(820px,75vw);';
     var bars = [];
     for (var i = 0; i < BUDGET.length; i++) {
       var row = document.createElement('div');
-      row.style.cssText = 'display:flex;flex-direction:column;gap:6px;';
+      row.style.cssText = 'display:flex;flex-direction:column;gap:clamp(6px,0.7vw,10px);';
       var topRow = document.createElement('div');
-      topRow.style.cssText = 'display:flex;justify-content:space-between;font-size:11px;letter-spacing:0.2em;';
+      topRow.style.cssText = 'display:flex;justify-content:space-between;font-size:clamp(11px,1vw,15px);letter-spacing:0.2em;';
       var dept = document.createElement('span');
       dept.textContent = BUDGET[i].dept;
       var amt = document.createElement('span');
@@ -2030,7 +2052,7 @@ window.addEventListener('scroll', () => {
       amt.textContent = BUDGET[i].amount;
       topRow.appendChild(dept); topRow.appendChild(amt);
       var track = document.createElement('div');
-      track.style.cssText = 'height:3px;background:' + PRIMARY_FAINT + ';position:relative;';
+      track.style.cssText = 'height:clamp(3px,0.4vw,6px);background:' + PRIMARY_FAINT + ';position:relative;';
       var fill = document.createElement('div');
       fill.style.cssText = 'height:100%;background:' + PRIMARY + ';width:0%;';
       track.appendChild(fill);
@@ -2056,13 +2078,13 @@ window.addEventListener('scroll', () => {
     var root = shotRoot();
     root.appendChild(metaLine('AGENDA \u00B7 ' + TOPICS.length + ' ITEMS'));
     var list = document.createElement('div');
-    list.style.cssText = 'display:flex;flex-direction:column;gap:10px;font-size:14px;letter-spacing:0.06em;';
+    list.style.cssText = 'display:flex;flex-direction:column;gap:clamp(10px,1.1vw,16px);font-size:clamp(15px,1.6vw,26px);letter-spacing:0.04em;';
     var items = [];
     for (var i = 0; i < TOPICS.length; i++) {
       var row = document.createElement('div');
-      row.style.cssText = 'position:relative;padding-left:34px;color:' + PRIMARY + ';transition:color 0.2s linear;';
+      row.style.cssText = 'position:relative;padding-left:clamp(34px,3vw,52px);color:' + PRIMARY + ';transition:color 0.2s linear;';
       var marker = document.createElement('span');
-      marker.style.cssText = 'position:absolute;left:0;top:0;font-family:' + FONT_MONO + ';color:' + PRIMARY_DIM + ';';
+      marker.style.cssText = 'position:absolute;left:0;top:0;font-family:' + FONT_MONO + ';color:' + PRIMARY_DIM + ';font-size:0.75em;';
       marker.textContent = pad2(i + 1);
       var label = document.createElement('span');
       label.textContent = TOPICS[i];
@@ -2098,10 +2120,10 @@ window.addEventListener('scroll', () => {
     root.style.justifyContent = 'center';
     root.appendChild(metaLine('PUBLIC COMMENT \u00B7 TIME REMAINING'));
     var big = document.createElement('div');
-    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:160px;line-height:1;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.02em;';
+    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(140px,22vw,360px);line-height:0.85;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.05em;font-variant-numeric:tabular-nums;';
     big.textContent = '180';
     var sub = document.createElement('div');
-    sub.style.cssText = 'font-family:' + FONT_MONO + ';font-size:12px;letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:8px;';
+    sub.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(12px,1vw,16px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(8px,1vw,16px);';
     sub.textContent = 'SECONDS';
     root.appendChild(big);
     root.appendChild(sub);
@@ -2123,9 +2145,8 @@ window.addEventListener('scroll', () => {
     var SVG_NS = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttribute('viewBox', '0 0 360 220');
-    svg.setAttribute('width', '420');
-    svg.setAttribute('height', '260');
-    svg.style.maxWidth = '50vw';
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    svg.style.cssText = 'width:min(70vw,900px);height:auto;max-height:65vh;display:block;';
     var positions = [
       [60,60],[140,50],[220,60],[300,55],
       [80,120],[170,110],[260,115],
@@ -2172,7 +2193,7 @@ window.addEventListener('scroll', () => {
     root.style.justifyContent = 'center';
     root.appendChild(metaLine('FROM THE FLOOR'));
     var q = document.createElement('div');
-    q.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:62px;line-height:1.12;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.005em;max-width:780px;font-style:italic;';
+    q.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(40px,6vw,96px);line-height:1.1;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.01em;max-width:min(1100px,80vw);font-style:italic;';
     q.textContent = '';
     root.appendChild(q);
     var full = QUOTES[idx % QUOTES.length];
@@ -2190,14 +2211,16 @@ window.addEventListener('scroll', () => {
 
   function ShotDonut() {
     var root = shotRoot();
+    root.style.display = 'flex';
+    root.style.flexDirection = 'column';
+    root.style.justifyContent = 'center';
     root.appendChild(metaLine('VOTE COMPOSITION'));
     var wrap = document.createElement('div');
-    wrap.style.cssText = 'display:flex;align-items:center;gap:48px;';
+    wrap.style.cssText = 'display:flex;align-items:center;gap:clamp(32px,5vw,80px);';
     var SVG_NS = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttribute('viewBox', '0 0 200 200');
-    svg.setAttribute('width', '220');
-    svg.setAttribute('height', '220');
+    svg.style.cssText = 'width:clamp(220px,32vw,420px);height:auto;display:block;';
     var R = 80, CX = 100, CY = 100, C = 2 * Math.PI * R;
     var bg = document.createElementNS(SVG_NS, 'circle');
     bg.setAttribute('cx', CX); bg.setAttribute('cy', CY); bg.setAttribute('r', R);
@@ -2224,13 +2247,13 @@ window.addEventListener('scroll', () => {
     }
     wrap.appendChild(svg);
     var legend = document.createElement('div');
-    legend.style.cssText = 'display:flex;flex-direction:column;gap:14px;font-size:12px;letter-spacing:0.22em;';
+    legend.style.cssText = 'display:flex;flex-direction:column;gap:clamp(14px,1.6vw,22px);font-size:clamp(13px,1.2vw,18px);letter-spacing:0.22em;';
     var legendData = [['YEA','70%'],['NAY','20%'],['ABS','10%']];
     for (var j = 0; j < 3; j++) {
       var lr = document.createElement('div');
-      lr.style.cssText = 'display:flex;gap:18px;color:' + PRIMARY + ';align-items:center;';
+      lr.style.cssText = 'display:flex;gap:clamp(14px,1.6vw,22px);color:' + PRIMARY + ';align-items:center;';
       var swatch = document.createElement('span');
-      swatch.style.cssText = 'display:inline-block;width:14px;height:3px;background:' + colors[j] + ';';
+      swatch.style.cssText = 'display:inline-block;width:clamp(14px,1.4vw,22px);height:3px;background:' + colors[j] + ';';
       var ln = document.createElement('span'); ln.textContent = legendData[j][0];
       var lp = document.createElement('span'); lp.textContent = legendData[j][1]; lp.style.color = PRIMARY_DIM;
       lr.appendChild(swatch); lr.appendChild(ln); lr.appendChild(lp);
@@ -2256,21 +2279,21 @@ window.addEventListener('scroll', () => {
     root.style.justifyContent = 'center';
     root.appendChild(metaLine('SESSION TIMELINE'));
     var wrap = document.createElement('div');
-    wrap.style.cssText = 'position:relative;width:640px;max-width:65vw;height:80px;margin-top:8px;';
+    wrap.style.cssText = 'position:relative;width:min(1000px,80vw);height:clamp(80px,10vw,140px);';
     var line = document.createElement('div');
     line.style.cssText = 'position:absolute;left:0;right:0;top:50%;height:1px;background:' + PRIMARY_FAINT + ';';
     wrap.appendChild(line);
     var marks = ['00:00','15:00','30:00','45:00','60:00'];
     for (var i = 0; i < marks.length; i++) {
       var t = document.createElement('div');
-      t.style.cssText = 'position:absolute;top:50%;width:1px;height:14px;background:' + PRIMARY_DIM + ';transform:translate(-50%,-50%);left:' + (i * 25) + '%;';
+      t.style.cssText = 'position:absolute;top:50%;width:1px;height:clamp(14px,1.6vw,22px);background:' + PRIMARY_DIM + ';transform:translate(-50%,-50%);left:' + (i * 25) + '%;';
       var lbl = document.createElement('div');
-      lbl.style.cssText = 'position:absolute;top:62%;font-size:10px;letter-spacing:0.18em;color:' + PRIMARY_DIM + ';transform:translate(-50%,0);left:' + (i * 25) + '%;';
+      lbl.style.cssText = 'position:absolute;top:62%;font-size:clamp(10px,0.9vw,14px);letter-spacing:0.18em;color:' + PRIMARY_DIM + ';transform:translate(-50%,0);left:' + (i * 25) + '%;';
       lbl.textContent = marks[i];
       wrap.appendChild(t); wrap.appendChild(lbl);
     }
     var marker = document.createElement('div');
-    marker.style.cssText = 'position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:' + PRIMARY + ';transform:translate(-50%,-50%);left:0%;box-shadow:0 0 0 4px rgba(201,168,76,0.18);';
+    marker.style.cssText = 'position:absolute;top:50%;width:clamp(9px,1vw,14px);height:clamp(9px,1vw,14px);border-radius:50%;background:' + PRIMARY + ';transform:translate(-50%,-50%);left:0%;box-shadow:0 0 0 4px rgba(201,168,76,0.18);';
     wrap.appendChild(marker);
     root.appendChild(wrap);
     return {
@@ -2289,10 +2312,10 @@ window.addEventListener('scroll', () => {
     var s = STATS[idx % STATS.length];
     root.appendChild(metaLine('CHAMBER METRIC'));
     var big = document.createElement('div');
-    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:170px;line-height:1;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.02em;opacity:0;';
+    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(140px,22vw,380px);line-height:0.85;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.05em;opacity:0;';
     big.textContent = s.value;
     var lbl = document.createElement('div');
-    lbl.style.cssText = 'font-family:' + FONT_MONO + ';font-size:13px;letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:12px;opacity:0;';
+    lbl.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(13px,1.1vw,18px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(12px,1.4vw,20px);opacity:0;';
     lbl.textContent = s.label;
     root.appendChild(big);
     root.appendChild(lbl);
@@ -2312,9 +2335,8 @@ window.addEventListener('scroll', () => {
     var W = 520, ROW = 44;
     var svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttribute('viewBox', '0 0 ' + (W + 80) + ' ' + (ROW * TRENDS.length));
-    svg.setAttribute('width', '600');
-    svg.setAttribute('height', String(ROW * TRENDS.length));
-    svg.style.maxWidth = '60vw';
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    svg.style.cssText = 'width:min(80vw,1100px);height:auto;display:block;';
     var paths = [];
     for (var i = 0; i < TRENDS.length; i++) {
       var d = sparkPath(TRENDS[i].values, W, ROW - 16);
@@ -2496,28 +2518,6 @@ window.addEventListener('scroll', () => {
   }
 
   decide();
-})();
-
-// Hero montage scaler: drives --montage-scale on .hero-montage-frame
-// so the IIFE's fixed-pixel shot internals (designed for an 880x550
-// canvas) render at the correct size inside the contained 16:10 frame
-// at any viewport width. Self-contained — does not touch the IIFE.
-(function(){
-  var frame = document.querySelector('.hero-montage-frame');
-  if (!frame) return;
-  var DESIGN_W = 880;
-  function update() {
-    var w = frame.clientWidth;
-    if (!w) return;
-    frame.style.setProperty('--montage-scale', String(w / DESIGN_W));
-  }
-  if ('ResizeObserver' in window) {
-    var ro = new ResizeObserver(update);
-    ro.observe(frame);
-  } else {
-    window.addEventListener('resize', update);
-  }
-  update();
 })();
 </script>
 </body>
