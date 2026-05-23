@@ -58,6 +58,7 @@ body::before {
 }
 
 /* ── NAV ── */
+/* Hidden over the hero; slides in once you scroll past the fold. */
 nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -66,15 +67,16 @@ nav {
   align-items: center;
   justify-content: space-between;
   padding: 20px clamp(20px, 3.5vw, 56px);
-  background: transparent;
-  transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
-  border-bottom: 1px solid transparent;
-}
-nav.is-scrolled {
   background: rgba(13,27,42,0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom-color: var(--border);
+  border-bottom: 1px solid var(--border);
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+nav.is-revealed {
+  transform: translateY(0);
 }
 
 .nav-logo {
@@ -199,22 +201,24 @@ nav.is-scrolled {
   position: relative;
   font-family: var(--serif);
   font-weight: 700;
-  font-size: clamp(64px, 14vw, 240px);
-  line-height: 0.85;
-  letter-spacing: -0.05em;
+  font-size: clamp(60px, 10.5vw, 186px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
   color: var(--cream);
   margin: 0;
   display: block;
 }
 
 .hero-wordmark .wm-line {
-  display: block;
+  display: inline-block;
   position: relative;
   white-space: nowrap;
+  vertical-align: top;
 }
 
+/* visual gap between the two words on the same line */
 .hero-wordmark .wm-line + .wm-line {
-  margin-top: -0.05em;
+  margin-left: 0.25em;
 }
 
 .hero-wordmark .wm-letter {
@@ -1266,7 +1270,7 @@ footer {
     padding: 24px;
   }
   .hero-side { max-width: none; }
-  .hero-wordmark { font-size: clamp(56px, 18vw, 140px); }
+  .hero-wordmark { font-size: clamp(51px, 13.5vw, 108px); }
   .stats-bar { grid-template-columns: 1fr 1fr; padding: 24px; }
   .section-inner { padding: 60px 24px; }
   .pain-grid { grid-template-columns: 1fr; }
@@ -1310,12 +1314,11 @@ footer {
 
     <div class="hero-content">
       <h1 class="hero-wordmark" aria-label="PoliticPublic">
-        <span class="wm-line" data-word="Politic"></span>
-        <span class="wm-line" data-word="Public" data-star="1"></span>
+        <span class="wm-line" data-word="PoliticPublic" data-star="1"></span>
       </h1>
       <div class="hero-side">
         <div class="hero-tag">Now in Private Beta</div>
-        <p class="hero-sub">The record moves fast. We read it faster. Votes, amendments, and motions distilled into clean briefs before the narrative sets in.</p>
+        <p class="hero-sub">Votes, amendments, and motions distilled into clean briefs before the narrative sets in.</p>
         <div class="hero-actions">
           <a href="#plans" class="btn-primary request-access-btn">Request Access</a>
           <a href="#sample" class="btn-secondary">See a Sample Brief</a>
@@ -1773,15 +1776,18 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').forEach(el => observer.observe(el));
 
-// Nav: add scrolled state once you've moved past the hero gutter
+// Nav: hidden above the hero, reveals once user scrolls past the fold.
 (function(){
   var navEl = document.querySelector('nav');
   if (!navEl) return;
   function onScroll() {
-    if (window.scrollY > 40) navEl.classList.add('is-scrolled');
-    else navEl.classList.remove('is-scrolled');
+    // Reveal when scroll passes ~70% of the viewport height (past the hero).
+    var threshold = window.innerHeight * 0.7;
+    if (window.scrollY > threshold) navEl.classList.add('is-revealed');
+    else navEl.classList.remove('is-revealed');
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
   onScroll();
 })();
 
@@ -1926,24 +1932,28 @@ document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').
     { kind: 'quote',    dur: 3200, idx: 3 }
   ];
 
+  // Each shot is a layer that fills the frame with the meta label
+  // pinned to the top-left corner and the actual content centered on
+  // both axes. Shots build by calling `shotRoot()`, appending one
+  // `metaLine(text)` (positioned absolutely so it doesn't push the
+  // content off-center), and then appending whatever they want as the
+  // centerpiece — that piece will sit dead-center thanks to the flex
+  // container below.
   function shotRoot() {
     var d = document.createElement('div');
-    d.style.cssText = 'position:absolute;inset:0;padding:clamp(40px,5vw,100px) clamp(40px,5vw,100px);color:' + PRIMARY + ';font-family:' + FONT_MONO + ';box-sizing:border-box;';
+    d.style.cssText = 'position:absolute;inset:0;color:' + PRIMARY + ';font-family:' + FONT_MONO + ';box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(80px,8vh,140px) clamp(40px,5vw,100px);';
     return d;
   }
 
   function metaLine(text) {
     var d = document.createElement('div');
-    d.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(11px,0.85vw,14px);letter-spacing:0.25em;color:' + PRIMARY_DIM + ';margin-bottom:clamp(20px,2.5vw,40px);text-transform:uppercase;';
+    d.style.cssText = 'position:absolute;top:clamp(28px,4vh,52px);left:clamp(40px,5vw,100px);font-family:' + FONT_MONO + ';font-size:clamp(11px,0.85vw,14px);letter-spacing:0.25em;color:' + PRIMARY_DIM + ';text-transform:uppercase;';
     d.textContent = text;
     return d;
   }
 
   function ShotVoteTally() {
     var root = shotRoot();
-    root.style.display = 'flex';
-    root.style.flexDirection = 'column';
-    root.style.justifyContent = 'center';
     root.appendChild(metaLine('CHAMBER \u00B7 VOTE TALLY'));
     var grid = document.createElement('div');
     grid.style.cssText = 'display:flex;gap:clamp(40px,8vw,140px);align-items:flex-end;';
@@ -1951,7 +1961,7 @@ document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').
     var nums = [];
     for (var i = 0; i < 3; i++) {
       var cell = document.createElement('div');
-      cell.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;';
+      cell.style.cssText = 'display:flex;flex-direction:column;align-items:center;';
       var num = document.createElement('div');
       num.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(120px,18vw,280px);line-height:0.9;font-weight:600;color:' + PRIMARY + ';font-variant-numeric:tabular-nums;letter-spacing:-0.04em;';
       num.textContent = '0';
@@ -2012,16 +2022,12 @@ document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').
 
   function ShotMotionPassed() {
     var root = shotRoot();
-    root.style.display = 'flex';
-    root.style.flexDirection = 'column';
-    root.style.justifyContent = 'center';
-    root.style.alignItems = 'flex-start';
     root.appendChild(metaLine('MOTION'));
     var big = document.createElement('div');
-    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(120px,18vw,300px);line-height:0.85;font-weight:600;color:' + PRIMARY + ';letter-spacing:-0.05em;opacity:0;';
+    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(120px,18vw,300px);line-height:0.85;font-weight:600;color:' + PRIMARY + ';letter-spacing:-0.05em;opacity:0;text-align:center;';
     big.textContent = 'PASSED';
     var sub = document.createElement('div');
-    sub.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(13px,1.1vw,18px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(14px,1.5vw,22px);opacity:0;';
+    sub.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(13px,1.1vw,18px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(14px,1.5vw,22px);opacity:0;text-align:center;';
     sub.textContent = '7 \u2014 2 \u00B7 CARRIED';
     root.appendChild(big);
     root.appendChild(sub);
@@ -2115,15 +2121,12 @@ document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').
 
   function ShotTimer() {
     var root = shotRoot();
-    root.style.display = 'flex';
-    root.style.flexDirection = 'column';
-    root.style.justifyContent = 'center';
     root.appendChild(metaLine('PUBLIC COMMENT \u00B7 TIME REMAINING'));
     var big = document.createElement('div');
-    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(140px,22vw,360px);line-height:0.85;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.05em;font-variant-numeric:tabular-nums;';
+    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(140px,22vw,360px);line-height:0.85;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.05em;font-variant-numeric:tabular-nums;text-align:center;';
     big.textContent = '180';
     var sub = document.createElement('div');
-    sub.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(12px,1vw,16px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(8px,1vw,16px);';
+    sub.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(12px,1vw,16px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(8px,1vw,16px);text-align:center;';
     sub.textContent = 'SECONDS';
     root.appendChild(big);
     root.appendChild(sub);
@@ -2188,12 +2191,9 @@ document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').
 
   function ShotQuote(idx) {
     var root = shotRoot();
-    root.style.display = 'flex';
-    root.style.flexDirection = 'column';
-    root.style.justifyContent = 'center';
     root.appendChild(metaLine('FROM THE FLOOR'));
     var q = document.createElement('div');
-    q.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(40px,6vw,96px);line-height:1.1;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.01em;max-width:min(1100px,80vw);font-style:italic;';
+    q.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(40px,6vw,96px);line-height:1.1;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.01em;max-width:min(1100px,80vw);font-style:italic;text-align:center;';
     q.textContent = '';
     root.appendChild(q);
     var full = QUOTES[idx % QUOTES.length];
@@ -2211,9 +2211,6 @@ document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').
 
   function ShotDonut() {
     var root = shotRoot();
-    root.style.display = 'flex';
-    root.style.flexDirection = 'column';
-    root.style.justifyContent = 'center';
     root.appendChild(metaLine('VOTE COMPOSITION'));
     var wrap = document.createElement('div');
     wrap.style.cssText = 'display:flex;align-items:center;gap:clamp(32px,5vw,80px);';
@@ -2274,9 +2271,6 @@ document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').
 
   function ShotTimeline() {
     var root = shotRoot();
-    root.style.display = 'flex';
-    root.style.flexDirection = 'column';
-    root.style.justifyContent = 'center';
     root.appendChild(metaLine('SESSION TIMELINE'));
     var wrap = document.createElement('div');
     wrap.style.cssText = 'position:relative;width:min(1000px,80vw);height:clamp(80px,10vw,140px);';
@@ -2306,16 +2300,13 @@ document.querySelectorAll('.stat-item, .pain-card, .step, .plan, .testimonial').
 
   function ShotStat(idx) {
     var root = shotRoot();
-    root.style.display = 'flex';
-    root.style.flexDirection = 'column';
-    root.style.justifyContent = 'center';
     var s = STATS[idx % STATS.length];
     root.appendChild(metaLine('CHAMBER METRIC'));
     var big = document.createElement('div');
-    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(140px,22vw,380px);line-height:0.85;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.05em;opacity:0;';
+    big.style.cssText = 'font-family:' + FONT_DISPLAY + ';font-size:clamp(140px,22vw,380px);line-height:0.85;font-weight:500;color:' + PRIMARY + ';letter-spacing:-0.05em;opacity:0;text-align:center;';
     big.textContent = s.value;
     var lbl = document.createElement('div');
-    lbl.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(13px,1.1vw,18px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(12px,1.4vw,20px);opacity:0;';
+    lbl.style.cssText = 'font-family:' + FONT_MONO + ';font-size:clamp(13px,1.1vw,18px);letter-spacing:0.3em;color:' + PRIMARY_DIM + ';margin-top:clamp(12px,1.4vw,20px);opacity:0;text-align:center;';
     lbl.textContent = s.label;
     root.appendChild(big);
     root.appendChild(lbl);
