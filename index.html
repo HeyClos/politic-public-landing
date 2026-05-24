@@ -1260,8 +1260,14 @@ footer {
   nav { padding: 14px 20px; }
   .nav-links { display: none; }
   .hero {
-    height: auto;
-    min-height: 100vh;
+    /* Need an explicit height so .hero-frame's height:100% resolves —
+       all of the frame's children are position:absolute, so without a
+       defined parent height the frame collapses and the montage
+       (inset:0) disappears. dvh keeps it correct as the iOS URL bar
+       shows/hides; vh is the fallback for older browsers. */
+    height: 100vh;
+    height: 100dvh;
+    min-height: 560px;
     padding: 12px;
   }
   .hero-content {
