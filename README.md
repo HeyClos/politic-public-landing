@@ -38,6 +38,8 @@ At the founder’s request on October 20, the page retains the existing “Backe
 
 ## Deployment integration
 
+Published to [politicpublic.com](https://politicpublic.com/) on October 20, 2026. Landing source release: `042ea75`; production FastAPI release: `a06c29f`. The public site passed 42 browser checks, 20 asset comparisons, the default favicon check, canonical redirect, and database health check. Deployment evidence is in `qa/deployment-results.json`. Production form submissions were intercepted during verification; no test subscribers or emails were created.
+
 The public site inspected on October 17 uses the FastAPI `/api/signup` endpoint. The linked GitHub landing repository still had an older Supabase implementation. This version follows the LIVE contract: `name`, `email`, `company`, `role`, `topics`, `zip`, `website` (honeypot), and `source_url`; success requires `{ "ok": true }`.
 
 A static preview does not collect requests. It reports that signup is unavailable instead of claiming success. Serve this page on the same origin as `/api/signup` in production. Do not add cross-origin signup access without a separate integration decision.

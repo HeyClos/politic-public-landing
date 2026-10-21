@@ -1,0 +1,71 @@
+{
+  "verified_on": "2026-10-20",
+  "site": "https://politicpublic.com/",
+  "landing_source_commit": "042ea75d9f16e9a52d52b348d011c88d58e7bd92",
+  "production_app_commit": "a06c29f5dd208d0cf6f6dda8c66474de32ff46d5",
+  "backend_tests_passed": 75,
+  "local_browser_checks_passed": 44,
+  "production_browser": {
+    "passed": 22,
+    "checks": [
+      "No horizontal overflow at 320px",
+      "No horizontal overflow at 390px",
+      "No horizontal overflow at 768px",
+      "No horizontal overflow at 1024px",
+      "No horizontal overflow at 1440px",
+      "Animation pause control works",
+      "Animation resumes",
+      "Reduced motion respected",
+      "Reduced-motion montage is static",
+      "Source note expands",
+      "Source note links to official records",
+      "Request access opens native modal",
+      "Escape closes modal",
+      "Focus returns to opener",
+      "Required email validation works",
+      "Failed submit preserves entered details",
+      "Failed submit can be retried",
+      "Signup payload matches live API contract",
+      "Success receives focus",
+      "New request resets successful form",
+      "Mobile modal has no horizontal overflow",
+      "No JavaScript runtime errors"
+    ],
+    "errors": [],
+    "note": "All signup POSTs were intercepted; no production signup was submitted."
+  },
+  "production_motion": {
+    "passed": 20,
+    "checks": [
+      "Main page uses the selected editorial treatment",
+      "Main page does not load the previous montage controller",
+      "Pause freezes the exact frame",
+      "Offscreen playback is suspended",
+      "quote stays steady",
+      "tally stays steady",
+      "brief stays steady",
+      "Sequence completes once",
+      "Complete brief stays on screen",
+      "Replay is available after completion",
+      "Replay starts from the agenda",
+      "Reduced motion presents the complete brief immediately",
+      "Reduced-motion state is still",
+      "Record and identity fit at 320px",
+      "Record and identity fit at 390px",
+      "Record and identity fit at 768px",
+      "Record and identity fit at 1024px",
+      "Record and identity fit at 1440px",
+      "All four existing backing logos are present",
+      "No JavaScript errors"
+    ],
+    "errors": []
+  },
+  "public_assets_byte_verified": 20,
+  "default_courier_favicon_verified": true,
+  "health": {
+    "ok": true,
+    "db": true
+  },
+  "www_redirect_verified": true,
+  "note": "Production signup POSTs and analytics were intercepted during browser QA. No test subscribers or confirmation emails were created. Public HTML matches the release after accounting for Cloudflare email protection."
+}
