@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-19",
+  "vector_files": 11,
+  "path_only": true,
+  "local_links_valid": true,
+  "browser_regression_checks_passed": 22,
+  "montage_unchanged": true,
+  "montage_sha256": {
+    "montage.js": "78ada3ad88d7c800d9d504dd7d9ed9af3efd98077aee3cce7ddd3299e8f7c6ed",
+    "montage.css": "bbedc08f4db3b013c2373ee8b5598c7e3c8fec36e90674c76c4d9287a8979a1e"
+  },
+  "logo_load_and_spacing_widths": [
+    320,
+    390,
+    1440
+  ],
+  "identity_board_checked_widths": [
+    390,
+    1440
+  ],
+  "identity_color_switch_verified": true,
+  "console_note": "A missing root favicon fallback was observed during preview and has been added.",
+  "historical": true,
+  "current_results": [
+    "results.json",
+    "motion-results.json"
+  ]
+}

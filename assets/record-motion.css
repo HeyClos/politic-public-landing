@@ -1,0 +1,113 @@
+/* Politic Public motion system: a meeting record unfolds at reading pace. */
+.chamber-editorial {
+  background: var(--white);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+}
+.chamber-editorial::after {
+  inset: auto 7px -6px;
+  height: 5px;
+  background: transparent;
+  border-bottom: 1px solid var(--rule);
+  border-inline: 1px solid var(--rule);
+}
+.chamber-editorial .chamber-heading {
+  margin: 0 28px;
+  padding: 20px 0 16px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  gap: 18px;
+  font-weight: 600;
+}
+.chamber-editorial .chamber-heading img { width: 39px; height: 39px; }
+.chamber-editorial .montage-frame { min-height: 390px; }
+.chamber-editorial #heroMontage {
+  --mg-gold: var(--ink);
+  --mg-dim: var(--green);
+  --mg-faint: var(--rule);
+  background: var(--white);
+  color: var(--ink);
+}
+.chamber-editorial .mg-shot { padding: 62px 8% 56px; }
+.chamber-editorial .mg-meta {
+  color: var(--green);
+  font-size: clamp(10px, 1.8cqw, 11px);
+  letter-spacing: 0;
+  text-transform: none;
+  top: 22px;
+}
+.chamber-editorial .mg-meta-left { left: 8%; }
+.chamber-editorial .mg-meta-right { right: 8%; max-width: 42%; }
+.chamber-editorial .mg-meta-foot { top: auto; bottom: 20px; }
+.mg-record-stack { width: 100%; }
+.mg-record-kicker {
+  font-size: clamp(11px, 2cqw, 13px);
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--green);
+  margin-bottom: 22px;
+}
+.chamber-editorial .mg-topics { gap: 0; }
+.chamber-editorial .mg-topic {
+  color: var(--ink);
+  font-size: clamp(27px, 6.1cqw, 43px);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -.015em;
+  padding-block: 9px;
+  transition: none;
+}
+.chamber-editorial .mg-topic:nth-child(2) {
+  text-decoration: underline;
+  text-decoration-color: var(--ochre);
+  text-decoration-thickness: 4px;
+  text-underline-offset: 6px;
+}
+.mg-record-detail {
+  max-width: 420px;
+  margin-top: 24px;
+  color: var(--muted);
+  font: 400 clamp(13px, 2.45cqw, 16px)/1.65 var(--font-body);
+}
+.chamber-editorial .mg-quote {
+  text-align: left;
+  font-size: clamp(32px, 7.6cqw, 52px);
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -.015em;
+}
+.chamber-editorial .mg-tally { justify-content: space-between; gap: 20px; padding: 10px 0 4px; max-width: 390px; }
+.chamber-editorial .mg-tally-cell { align-items: flex-start; }
+.chamber-editorial .mg-tally-number { font-size: clamp(78px, 18cqw, 120px); letter-spacing: -.02em; }
+.chamber-editorial .mg-tally-cell:first-child .mg-tally-number { color: var(--green); }
+.chamber-editorial .mg-tally-label { margin-top: 18px; letter-spacing: 0; font-size: 12px; font-weight: 400; }
+.chamber-editorial .mg-record-title {
+  font: 600 clamp(35px, 8.4cqw, 59px)/1.02 var(--font-display);
+  letter-spacing: -.015em;
+  text-transform: none;
+  max-width: 440px;
+}
+.mg-record-status {
+  border-top: 1px solid var(--rule);
+  margin-top: 24px;
+  padding-top: 17px;
+  font-size: clamp(11px, 2.15cqw, 14px);
+  line-height: 1.5;
+  color: var(--green);
+  font-weight: 600;
+}
+.chamber-editorial .mg-record-footnote { max-width: 84%; font-size: clamp(9px, 1.7cqw, 11px); color: var(--muted); }
+.chamber-editorial figcaption { border-color: var(--rule); color: var(--muted); padding: 12px 28px 15px; }
+.chamber-editorial figcaption button { color: var(--ink); padding: 8px 0; min-width: 82px; }
+.chamber-editorial figcaption button:disabled { opacity: .7; cursor: default; }
+.chamber-editorial .motion-fallback { color: var(--ink); font-size: 40px; text-transform: none; }
+@media (max-width: 520px) {
+  .chamber-editorial .chamber-heading { margin-inline: 20px; padding-block: 14px; font-size: 11px; }
+  .chamber-editorial .chamber-heading img { width: 33px; height: 33px; }
+  .chamber-editorial .montage-frame { height: 350px; min-height: 350px; }
+  .chamber-editorial .mg-shot { padding-block: 58px 47px; }
+  .mg-record-kicker { margin-bottom: 16px; }
+  .mg-record-detail { margin-top: 18px; line-height: 1.6; }
+  .mg-record-status { margin-top: 18px; padding-top: 13px; }
+  .chamber-editorial figcaption { padding: 8px 18px 10px; }
+}

@@ -1,0 +1,157 @@
+/* Preserved council montage, sized to its own panel rather than the viewport. */
+#heroMontage.mg-montage {
+  --mg-gold: #e4b95b;
+  --mg-dim: rgba(228, 185, 91, .66);
+  --mg-faint: rgba(228, 185, 91, .20);
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  pointer-events: none;
+  background: #142b36;
+  color: var(--mg-gold);
+  font-family: var(--font-body, Arial, sans-serif);
+  isolation: isolate;
+}
+.mg-montage *, .mg-montage *::before, .mg-montage *::after { box-sizing: border-box; }
+.mg-shot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 7%;
+  color: var(--mg-gold);
+}
+.mg-meta {
+  position: absolute;
+  top: 28px;
+  max-width: 65%;
+  font-size: clamp(9px, 1.65cqw, 11px);
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: .06em;
+  color: var(--mg-dim);
+  text-transform: uppercase;
+}
+.mg-meta-left { left: 7%; }
+.mg-meta-right { right: 7%; max-width: 25%; text-align: right; }
+.mg-meta-foot { top: auto; bottom: 28px; left: 7%; }
+.mg-centered { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+.mg-tally { display: flex; gap: 7cqw; align-items: flex-end; }
+.mg-tally-cell { display: flex; flex-direction: column; align-items: center; }
+.mg-tally-number {
+  font-family: var(--font-display, Arial, sans-serif);
+  font-size: clamp(52px, 18cqw, 150px);
+  line-height: .9;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.06em;
+}
+.mg-tally-label { font-size: 10px; font-weight: 600; letter-spacing: .10em; margin-top: 16px; }
+.mg-roll { display: flex; flex-direction: column; width: 85%; }
+.mg-roll-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: clamp(5px, 1.3cqh, 9px) 0;
+  border-bottom: 1px solid var(--mg-faint);
+  font-size: clamp(11px, 2.5cqw, 16px);
+  line-height: 1.25;
+  transition: opacity 60ms linear;
+}
+.mg-roll-vote { font-weight: 700; }
+.mg-passed {
+  font-family: var(--font-display, Arial, sans-serif);
+  font-size: clamp(52px, 16cqw, 120px);
+  line-height: .9;
+  font-weight: 800;
+  letter-spacing: -.06em;
+}
+.mg-passed-caption, .mg-timer-caption, .mg-stat-caption {
+  margin-top: 20px;
+  font-size: clamp(10px, 1.9cqw, 13px);
+  line-height: 1.5;
+  letter-spacing: .08em;
+  color: var(--mg-dim);
+}
+.mg-passed-arrow { margin-top: 26px; opacity: 0; transition: opacity 80ms; }
+.mg-budget { display: flex; flex-direction: column; justify-content: center; gap: 24px; width: 100%; }
+.mg-budget-row { display: flex; align-items: center; gap: 14px; }
+.mg-budget-label { width: 27%; flex-shrink: 0; font-size: clamp(9px, 2cqw, 12px); font-weight: 600; letter-spacing: .03em; }
+.mg-budget-track { flex: 1; height: 12px; background: var(--mg-faint); position: relative; }
+.mg-budget-fill { position: absolute; inset: 0; width: 0; background: var(--mg-gold); }
+.mg-budget-amount { width: 15%; flex-shrink: 0; text-align: right; font-size: clamp(10px, 2cqw, 13px); font-variant-numeric: tabular-nums; }
+.mg-topics { display: flex; flex-direction: column; justify-content: center; width: 100%; gap: 4px; }
+.mg-topic {
+  font-family: var(--font-display, Arial, sans-serif);
+  font-size: clamp(16px, 4.2cqw, 31px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -.04em;
+  transition: color 80ms, text-decoration 80ms;
+}
+.mg-timer {
+  font-family: var(--font-display, Arial, sans-serif);
+  font-size: clamp(86px, 25cqw, 190px);
+  line-height: .85;
+  font-weight: 700;
+  letter-spacing: -.06em;
+  font-variant-numeric: tabular-nums;
+}
+.mg-map { display: grid; grid-template-columns: repeat(16, 1fr); grid-template-rows: repeat(12, 1fr); gap: 3px; width: 100%; height: 64cqh; }
+.mg-quote {
+  font-family: var(--font-display, Arial, sans-serif);
+  font-size: clamp(24px, 6.2cqw, 46px);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -.045em;
+  max-width: 100%;
+  text-align: center;
+}
+.mg-donut { width: min(60cqh, 66cqw); height: auto; display: block; overflow: visible; }
+.mg-timeline { width: 96%; }
+.mg-timeline-bar { position: relative; height: 2px; background: var(--mg-faint); }
+.mg-timeline-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--mg-gold); }
+.mg-timeline-tick { position: absolute; top: -6px; width: 2px; height: 14px; background: var(--mg-faint); transform: translateX(-1px); }
+.mg-timeline-labels { position: relative; margin-top: 18px; height: 80px; }
+.mg-timeline-label {
+  position: absolute;
+  transform: translateX(-50%);
+  width: 12%;
+  text-align: center;
+  font-size: clamp(8px, 1.6cqw, 10px);
+  line-height: 1.5;
+  color: var(--mg-faint);
+  transition: color 80ms;
+}
+.mg-timeline-time { font-weight: 700; font-variant-numeric: tabular-nums; }
+.mg-timeline-caption { margin-top: 4px; }
+.mg-stat { transform: scale(.96); transition: transform 600ms ease-out; }
+.mg-stat-number {
+  font-family: var(--font-display, Arial, sans-serif);
+  font-size: clamp(50px, 17cqw, 140px);
+  line-height: .9;
+  font-weight: 800;
+  letter-spacing: -.055em;
+}
+.mg-trends { display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 59cqh; }
+.mg-trends-row { display: flex; align-items: center; gap: 18px; }
+.mg-trends-label { width: 30%; flex-shrink: 0; font-size: clamp(9px, 1.9cqw, 12px); line-height: 1.4; font-weight: 500; letter-spacing: .02em; }
+.mg-trends-line { flex: 1; min-width: 0; height: 8cqh; }
+.mg-flash { position: absolute; inset: 0; background: var(--mg-gold); opacity: 0; pointer-events: none; z-index: 10; }
+@container (max-width: 420px) {
+  .mg-meta { top: 24px; }
+  .mg-meta-foot { top: auto; bottom: 24px; }
+  .mg-roll { width: 100%; }
+  .mg-budget { gap: 27px; }
+  .mg-budget-row { gap: 10px; }
+  .mg-timeline-label { width: 22%; font-size: 9px; }
+  .mg-timeline-label:nth-child(even) { top: 78px; }
+  .mg-timeline-labels { height: 145px; }
+  .mg-timeline-label:nth-child(even)::before { content: ''; display: block; position: absolute; left: 50%; bottom: calc(100% + 4px); height: 67px; width: 1px; background: var(--mg-faint); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mg-montage * { transition: none !important; }
+}

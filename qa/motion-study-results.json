@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-19",
+  "status": "Separate proposal; current landing page retains original montage",
+  "motion_preview_checks_passed": 23,
+  "final_copy_layout_widths": [
+    320,
+    390,
+    1440
+  ],
+  "single_pass_seconds": 12.6,
+  "crossfade_ms": 400,
+  "original_montage_sha256": "78ada3ad88d7c800d9d504dd7d9ed9af3efd98077aee3cce7ddd3299e8f7c6ed",
+  "original_montage_css_sha256": "bbedc08f4db3b013c2373ee8b5598c7e3c8fec36e90674c76c4d9287a8979a1e",
+  "signup_submissions": 0,
+  "historical": true,
+  "current_results": [
+    "results.json",
+    "motion-results.json"
+  ]
+}

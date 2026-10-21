@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Motion with a purpose — Politic Public</title>
+<link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+body{padding:32px}.study{max-width:1440px;margin:auto}.study-head{display:flex;justify-content:space-between;align-items:end;gap:50px;margin-bottom:32px}.study-head .eyebrow{margin-bottom:12px}.study-head h1{font:700 clamp(38px,4vw,60px)/1.02 var(--font-display);max-width:660px}.study-head>p{font-size:14px;max-width:440px;color:var(--muted)}.study-controls{display:flex;justify-content:space-between;align-items:center;gap:20px;border-block:1px solid var(--rule);padding:16px 0}.study-buttons{display:flex;gap:10px;flex-wrap:wrap}.study-buttons button{border:1px solid var(--rule);background:transparent;padding:10px 16px;font-size:13px}.study-buttons button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:var(--paper)}.open{font-size:13px;white-space:nowrap}.study-caption{font-size:13px;color:var(--green);padding:16px 0;min-height:55px}.study-frame{width:100%;height:940px;border:1px solid var(--rule);display:block;background:var(--paper)}.study-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;padding-top:30px}.study-notes h2{font-size:28px;text-transform:none;margin-bottom:10px}.study-notes p{font-size:13px;color:var(--muted);line-height:1.65}.study-footer{padding:30px 0 0;font-size:12px;color:var(--muted)}
+@media(max-width:700px){body{padding:20px}.study-head{display:block}.study-head>p{margin-top:20px}.study-controls{align-items:start;flex-direction:column}.study-buttons{gap:7px}.study-buttons button{padding:10px;font-size:11px}.study-frame{height:860px}.study-notes{grid-template-columns:1fr;gap:24px}}
+</style>
+</head>
+<body><main class="study">
+<header class="study-head"><div><p class="eyebrow">Politic Public / Motion study</p><h1>Let the meeting unfold.<br>Then let the page rest.</h1></div><p>Keep the animation’s subject matter. Give it the calm, readable pace of a useful record. The calmer sequence is now the main landing-page treatment. Compare it with the previous montage and a still alternative.</p></header>
+<div class="study-controls"><div class="study-buttons" aria-label="Choose a motion treatment"><button type="button" data-preview="editorial" aria-pressed="true">Calmer sequence</button><button type="button" data-preview="still" aria-pressed="false">Still version</button><button type="button" data-preview="original" aria-pressed="false">Previous montage</button></div><a class="open" id="open-preview" href="../index.html" target="_blank" rel="noopener">Open full page ↗</a></div>
+<p class="study-caption" id="study-caption" aria-live="polite">Selected: four connected scenes, gentle crossfades, then a complete brief. Replay is optional.</p>
+<iframe class="study-frame" id="study-frame" title="Politic Public landing-page motion comparison" src="../index.html"></iframe>
+<section class="study-notes"><article><h2>Steady, with character.</h2><p>The Courier’s personality stays in its contours. The frame stays still. Remove camera shake, cut flashes, racing counters, and typewriter effects.</p></article><article><h2>One record you can follow.</h2><p>A housing item leads to a parking amendment, a vote, and a brief. The distinction between an adopted amendment and pending project approval shows why context matters.</p></article><article><h2>Paper, ink, a little color.</h2><p>Warm white carries the information. Ink makes it readable. Muted green organizes it; ochre underlines a relevant detail. After about thirteen seconds, the page rests.</p></article></section>
+<footer class="study-footer">Local design study. All meeting content is fictional. The selected treatment is active on the main landing page. The previous animation is archived for comparison.</footer>
+</main>
+<script>
+const choices={editorial:{url:'../index.html',description:'Selected: four connected scenes, gentle crossfades, then a complete brief. Replay is optional.'},still:{url:'../index.html?still=1',description:'The same paper-and-ink composition, held on the complete brief from the start.'},original:{url:'archive/original-motion.html',description:'Previous treatment: twenty short scenes in a continuous loop, with camera shake and gold cut flashes.'}};
+document.querySelectorAll('[data-preview]').forEach(button=>button.addEventListener('click',()=>{const choice=choices[button.dataset.preview];document.querySelectorAll('[data-preview]').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));document.getElementById('study-frame').src=choice.url;document.getElementById('open-preview').href=choice.url;document.getElementById('study-caption').textContent=choice.description;}));
+</script></body></html>

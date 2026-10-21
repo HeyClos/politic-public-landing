@@ -1,0 +1,56 @@
+POLITIC PUBLIC — THE COURIER
+Final vector identity | 19 October 2026
+
+THE IDEA
+An attentive local courier carrying the public record into reach. The uneven
+silhouette adds a human character to the product's promise of preparedness.
+
+THE APPROVED DRAWING
+The full Courier follows the original selected sketch: three unequal upright
+tail feathers, three curved wing cuts, a round eye, wiry staggered feet, and an
+outlined tilted document. The paper texture has been removed. The character
+of the contour has been retained. The wordmark is Barlow Condensed 700,
+converted to outlines in all final signatures.
+
+ASSETS
+logo-ink.svg / logo-paper.svg / logo-gold.svg / logo-green.svg
+  Full signature. Use it for first encounters with the brand.
+mark.svg / mark-paper.svg / mark-gold.svg
+  Full standalone Courier. Use at 48 pixels wide or larger; larger is better
+  when the fine toe and feather detail is important.
+mark-small.svg
+  Optical Courier for smaller contexts: larger eye, wider negative spaces,
+  one wing cut, stronger document counter, simplified feet.
+favicon.svg / favicon.ico / favicon-16.png / favicon-32.png / favicon-48.png
+  Optical mark on a gold field that remains visible on light and dark tabs.
+apple-touch-icon.png
+  180 x 180 home-screen icon.
+social-card.svg / social-card.png
+  1200 x 630 link preview.
+PNG logo and mark exports
+  Transparent high-resolution artwork. SVG remains the primary master.
+
+COLOR
+Ink #142b36 | Paper #f4f1e8 | Ochre #e4b95b | Green #47675d
+Use ink on paper, or paper/ochre on ink. Preserve the open counters.
+
+USAGE
+Keep clear space of at least one quarter of the visible bird's height.
+Scale proportionally. Keep the right-facing orientation. Do not redraw the
+feathers, replace the paper with a solid bag, add facial expressions, or
+distress the vector to imitate raster texture. Use the optical version when
+the small spaces stop reading clearly.
+
+SOURCE AND REBUILD
+Editable SVG masters: brand/source/courier-master.svg and
+brand/source/courier-small-master.svg. The full source was traced to cubic
+vector contours from the selected ImageGen sketch with VTracer; the optical
+source was drawn separately for small-size clarity. Both masters are paths.
+
+Build derived SVGs with scripts/build-brand.py (fonttools + brotli).
+Export PNG and ICO with scripts/render-brand.cjs (sharp).
+The outlined wordmark retains the licensed typeface's shapes. See the
+included Barlow Condensed license. The website's body font is Public Sans.
+
+STATUS
+Applied to the local landing-page package. No production deployment.
